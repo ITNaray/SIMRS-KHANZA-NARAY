@@ -2220,6 +2220,44 @@ public final class RMDataResumePasien extends javax.swing.JDialog {
         KodeProsedurSekunder3.setText("");
         Kondisi.requestFocus();
     } 
+    
+        // dipanggil dari form SOAP menu Resume Otomatis
+    public void setDataDariSOAP(
+            String keluhanSOAP,
+            String pemeriksaanSOAP,
+            String asesmenSOAP,
+            String planSOAP,
+            String evaluasiSOAP
+    ) {
+        // 1. Keluhan dari SOAP -> field Keluhan di resume
+        Keluhan.setText(keluhanSOAP);
+
+        // 2. Pemeriksaan dari SOAP -> sementara masukkan ke JalannyaPenyakit
+        //    (kalau nanti kamu punya field "VitalSign" khusus, bisa diganti ke sana)
+        JalannyaPenyakit.setText(pemeriksaanSOAP);
+
+        // 3. PemeriksaanPenunjang & HasilLaborat sementara dibiarkan,
+        //    nanti baru diisi dari modul penunjang & lab
+        // PemeriksaanPenunjang.setText("");
+        // HasilLaborat.setText("");
+
+        // 4. Plan + Evaluasi -> Obat2an (obat/nasihat pulang)
+        String gabunganPlan = (planSOAP + "\n" + evaluasiSOAP).trim();
+        Obat2an.setText(gabunganPlan);
+
+        // 5. AsesmenSOAP -> bantu isi DiagnosaUtama kalau masih kosong
+        if (!asesmenSOAP.trim().equals("")) {
+            if (DiagnosaUtama.getText().trim().equals("")) {
+                DiagnosaUtama.setText(asesmenSOAP);
+            } else {
+                DiagnosaUtama.setText(
+                    DiagnosaUtama.getText() + " (" + asesmenSOAP + ")"
+                );
+            }
+        }
+    }
+
+   
 
     private void getData() {
         if(tbObat.getSelectedRow()!= -1){

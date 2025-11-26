@@ -2356,7 +2356,7 @@ public final class DlgRawatJalan extends javax.swing.JDialog {
     panelGlass12.add(jLabel28);
     // align Asesmen label with Subjek (same row)
     jLabel28.setBounds(565, 70, 90, 23);
-
+    
     jLabel26.setText("Plan :");
     jLabel26.setName("jLabel26"); 
     panelGlass12.add(jLabel26);
@@ -2479,9 +2479,27 @@ public final class DlgRawatJalan extends javax.swing.JDialog {
     panelGlass12.add(scrollPane3);
     // slightly larger Asesmen area (right column) aligned with Subjek
     scrollPane3.setBounds(660, 70, 520, 70);
+    
+    // FITUR YANG MEGATUR UNTUK MENAMBAHKAN KOLOM BUTTON FUNGSI BARU
+    panelGlass12.add(BtnResume);
+    BtnResume.setBounds(1200, 70, 120,30);
+    BtnResume.setText("Resume Pasien");
+    BtnResume.setFocusPainted(false);
+    BtnResume.setFont(new java.awt.Font("Tahoma", 0, 11)); 
+    BtnResume.setGlassColor(new java.awt.Color(255, 255, 255));
+    BtnResume.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+    BtnResume.setMargin(new java.awt.Insets(1, 1, 1, 1));
+    BtnResume.setName("BtnResume"); 
+    BtnResume.setPreferredSize(new java.awt.Dimension(190, 23));
+    BtnResume.setRoundRect(true);
+    BtnResume.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+            BtnResumeActionPerformed(evt);
+        }
+    });
 
-        scrollPane6.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.RED,1));
-        scrollPane6.setName("scrollPane6"); 
+    scrollPane6.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.RED,1));
+    scrollPane6.setName("scrollPane6"); 
 
     TindakLanjut.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
     TindakLanjut.setColumns(36);
@@ -3610,51 +3628,6 @@ public final class DlgRawatJalan extends javax.swing.JDialog {
         });
         FormInput.add(ChkJln);
         ChkJln.setBounds(906, 10, 23, 23);
-        
-        
-        BtnRiwayat.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/item.png"))); 
-        BtnRiwayat.setText("Riwayat Pasien");
-        // samakan gaya dengan tombol Simpan
-        BtnRiwayat.setFocusPainted(false);
-        BtnRiwayat.setFont(new java.awt.Font("Tahoma", 0,11));
-        BtnRiwayat.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        BtnRiwayat.setMargin(new java.awt.Insets(1, 1, 1, 1));
-        BtnRiwayat.setName("BtnRiwayat"); 
-        // ukuran sama seperti tombol Simpan (100 x 30)
-        BtnRiwayat.setPreferredSize(new java.awt.Dimension(100, 30));
-        // aktifkan bentuk pil & warna hijau (kalau pakai widget.Button)
-        BtnRiwayat.setRoundRect(true);
-        BtnRiwayat.setGlassColor(new java.awt.Color(204, 255, 204)); // hijau muda
-        BtnRiwayat.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BtnRiwayatActionPerformed(evt);
-            }
-        });
-        
-        //untuk button di pindahkan ke atas
-        FormInput.add(BtnRiwayat);
-        BtnRiwayat.setBounds(950, 8, 120,30);
-        
-        BtnResume.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/item.png"))); 
-        BtnResume.setText("Resume Pasien");
-        BtnResume.setFocusPainted(false);
-        BtnResume.setFont(new java.awt.Font("Tahoma", 0, 11)); 
-        BtnResume.setGlassColor(new java.awt.Color(255, 255, 255));
-        BtnResume.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        BtnResume.setMargin(new java.awt.Insets(1, 1, 1, 1));
-        BtnResume.setName("BtnResume"); 
-        BtnResume.setPreferredSize(new java.awt.Dimension(190, 23));
-        BtnResume.setRoundRect(true);
-        BtnResume.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BtnResumeActionPerformed(evt);
-            }
-        });
-
-        FormInput.add(BtnResume);
-        BtnResume.setBounds(1100, 8, 120,30);
-        
-        
 
         internalFrame1.add(FormInput, java.awt.BorderLayout.PAGE_START);
 
@@ -3692,21 +3665,21 @@ public final class DlgRawatJalan extends javax.swing.JDialog {
         FormMenu.setPreferredSize(new java.awt.Dimension(150, 483));
         FormMenu.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 1, 1));
      
-//        BtnRiwayat.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/item.png"))); 
-//        BtnRiwayat.setText("Riwayat Pasien");
-//        BtnRiwayat.setFocusPainted(false);
-//        BtnRiwayat.setFont(new java.awt.Font("Tahoma", 0, 11)); 
-//        BtnRiwayat.setGlassColor(new java.awt.Color(255, 255, 255));
-//        BtnRiwayat.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-//        BtnRiwayat.setMargin(new java.awt.Insets(1, 1, 1, 1));
-//        BtnRiwayat.setName("BtnRiwayat"); 
-//        BtnRiwayat.setPreferredSize(new java.awt.Dimension(190, 23));
-//        BtnRiwayat.setRoundRect(false);
-//        BtnRiwayat.addActionListener(new java.awt.event.ActionListener() {
-//            public void actionPerformed(java.awt.event.ActionEvent evt) {
-//                BtnRiwayatActionPerformed(evt);
-//            }
-//        });
+        BtnRiwayat.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/item.png"))); 
+        BtnRiwayat.setText("Riwayat Pasien");
+        BtnRiwayat.setFocusPainted(false);
+        BtnRiwayat.setFont(new java.awt.Font("Tahoma", 0, 11)); 
+        BtnRiwayat.setGlassColor(new java.awt.Color(255, 255, 255));
+        BtnRiwayat.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        BtnRiwayat.setMargin(new java.awt.Insets(1, 1, 1, 1));
+        BtnRiwayat.setName("BtnRiwayat"); 
+        BtnRiwayat.setPreferredSize(new java.awt.Dimension(190, 23));
+        BtnRiwayat.setRoundRect(false);
+        BtnRiwayat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnRiwayatActionPerformed(evt);
+            }
+        });
         
      
         BtnResepObat.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/item.png"))); 
@@ -7681,68 +7654,107 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
         }
     }//GEN-LAST:event_BtnTriaseIGDActionPerformed
 
-    private void BtnResumeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnResumeActionPerformed
-        if(TNoRw.getText().trim().equals("")){
-            JOptionPane.showMessageDialog(null,"Maaf, Silahkan anda pilih dulu dengan menklik data pada table...!!!");
-            TCari.requestFocus();
-        }else{
-            this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            RMDataResumePasien resume=new RMDataResumePasien(null,false);
-            resume.isCek();
-            resume.setSize(internalFrame1.getWidth()-20,internalFrame1.getHeight()-20);
-            resume.setLocationRelativeTo(internalFrame1);
-            resume.setNoRm(TNoRw.getText(),DTPCari2.getDate());
-            resume.tampil();
-            // ⬇️ PENTING: kalau jendela resume DITUTUP, baru kita update indikator
-            resume.addWindowListener(new java.awt.event.WindowAdapter() {
-                @Override
-                public void windowClosed(java.awt.event.WindowEvent e) {
-                    updateResumeRalanUI();
-                }
-                @Override
-                public void windowClosing(java.awt.event.WindowEvent e) {
-                    updateResumeRalanUI();
-                }
-            });
-            resume.setVisible(true);
-            this.setCursor(Cursor.getDefaultCursor());
-            
-            
-        }
-    }//GEN-LAST:event_BtnResumeActionPerformed
-    
-    //fungsi untuk membuat indikator resume
-    private void updateResumeRalanUI() {
-    String norawat = TNoRw.getText().trim();
-
-    // Kalau form belum ada No Rawat -> disable tombol
-    if(norawat.equals("")){
-        BtnResume.setText("Resume Pasien");
-        BtnResume.setEnabled(false);
-        BtnResume.setGlassColor(new java.awt.Color(240,240,240));
+private void BtnResumeActionPerformed(java.awt.event.ActionEvent evt) {                                          
+    // 1. Validasi No.Rawat
+    if(TNoRw.getText().trim().equals("")){
+        JOptionPane.showMessageDialog(null,
+            "Maaf, Silahkan anda pilih dulu dengan menklik data pada table...!!!");
+        TCari.requestFocus();
         return;
     }
 
-    // cek di database resume RALAN (resume_pasien)
+    String norawat = TNoRw.getText().trim();
+
+    // 2. Cek apakah resume sudah ada atau belum
     int jml = Sequel.cariInteger(
         "SELECT COUNT(*) FROM resume_pasien WHERE no_rawat=?", 
         norawat
     );
 
-    if(jml > 0){
-        // ✔ Resume SUDAH ada
-        BtnResume.setText("Lihat Resume");
-        BtnResume.setEnabled(true);
-        BtnResume.setGlassColor(new java.awt.Color(204,255,204)); // hijau muda
-        BtnResume.setRoundRect(true);
+    this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+    // 3. Siapkan form resume
+    RMDataResumePasien resume = new RMDataResumePasien(null,false);
+    resume.isCek();
+    resume.setSize(internalFrame1.getWidth()-20,internalFrame1.getHeight()-20);
+    resume.setLocationRelativeTo(internalFrame1);
+    resume.setNoRm(TNoRw.getText(),DTPCari2.getDate());
+
+    if(jml == 0){
+        // Harus pilih baris SOAP dulu
+        if(tbPemeriksaan.getSelectedRow() == -1){
+            this.setCursor(Cursor.getDefaultCursor());
+            JOptionPane.showMessageDialog(null,
+                "Maaf, silahkan pilih dulu baris SOAP yang akan dijadikan resume...!!!");
+            tbPemeriksaan.requestFocus();
+            return;
+        }
+        // Isi field SOAP dari tabel
+        getDataPemeriksaan();  
+        // Ambil isi SOAP
+        String keluhan   = TKeluhan.getText();                 
+        String obj       = TPemeriksaan.getText();             
+        String asesmen   = TPenilaian.getText();               
+        String plan      = (TindakLanjut.getText() + "\n" +
+                            TInstruksi.getText()).trim();      
+        String evaluasi  = TEvaluasi.getText();                
+        // Tampilkan form + isi dari SOAP
+        resume.tampil();
+        resume.setDataDariSOAP(keluhan, obj, asesmen, plan, evaluasi);
+
     } else {
-        // ✖ Resume BELUM ada
-        BtnResume.setText("Buat Resume");
-        BtnResume.setEnabled(true);
-        BtnResume.setGlassColor(new java.awt.Color(255,230,230)); // merah muda
-        BtnResume.setRoundRect(true);
+        resume.tampil();
     }
+
+    // 4. Setelah jendela resume ditutup, update indikator tombol
+    resume.addWindowListener(new java.awt.event.WindowAdapter() {
+        @Override
+        public void windowClosed(java.awt.event.WindowEvent e) {
+            updateResumeRalanUI();
+        }
+        @Override
+        public void windowClosing(java.awt.event.WindowEvent e) {
+            updateResumeRalanUI();
+        }
+    });
+
+    resume.setVisible(true);
+    this.setCursor(Cursor.getDefaultCursor());
 }
+
+        //fungsi untuk membuat indikator resume
+        private void updateResumeRalanUI() {
+        String norawat = TNoRw.getText().trim();
+
+        // Kalau form belum ada No Rawat -> disable tombol
+        if(norawat.equals("")){
+            BtnResume.setText("Resume Pasien");
+            BtnResume.setEnabled(false);
+            BtnResume.setGlassColor(new java.awt.Color(240,240,240));
+            return;
+        }
+        // cek di database resume RALAN (resume_pasien)
+        int jml = Sequel.cariInteger(
+            "SELECT COUNT(*) FROM resume_pasien WHERE no_rawat=?", 
+            norawat
+        );
+
+        if(jml > 0){
+            // ✔ Resume SUDAH ada
+            BtnResume.setText("Lihat Resume");
+            BtnResume.setEnabled(true);
+            BtnResume.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/accept.png")));
+            BtnResume.setGlassColor(new java.awt.Color(204,255,204)); // hijau muda
+            BtnResume.setRoundRect(true);
+        } else {
+            // ✖ Resume BELUM ada
+            BtnResume.setText("Buat Resume");
+            BtnResume.setEnabled(true);
+            BtnResume.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/cancel.png")));
+            BtnResume.setGlassColor(new java.awt.Color(255,230,230)); // merah muda
+            BtnResume.setRoundRect(true);
+        }
+    }
 
     private void cmbKesadaranKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbKesadaranKeyPressed
         Valid.pindah(evt,TGCS,LingkarPerut);
@@ -13384,7 +13396,7 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
         TanggalRegistrasi.setHighlighter(null);
         TanggalRegistrasi.setName("TanggalRegistrasi");
         
-        //FormMenu.add(BtnRiwayat);
+        FormMenu.add(BtnRiwayat);
         FormMenu.add(BtnResepObat);
         FormMenu.add(BtnCopyResep);
         FormMenu.add(BtnResepLuar);
