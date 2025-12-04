@@ -300,6 +300,7 @@ public class DlgPermintaanRanap extends javax.swing.JDialog {
         jLabel1 = new javax.swing.JLabel();
         dokterDPJP = new widget.TextBox();
         btnDPJP = new widget.Button();
+        kdDokterDPJP = new widget.TextBox();
         PanelAccor = new widget.PanelBiasa();
         ChkAccor = new widget.CekBox();
         ScrollMenu = new widget.ScrollPane();
@@ -763,8 +764,13 @@ public class DlgPermintaanRanap extends javax.swing.JDialog {
         KdKamar.setEditable(false);
         KdKamar.setHighlighter(null);
         KdKamar.setName("KdKamar"); // NOI18N
+        KdKamar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                KdKamarActionPerformed(evt);
+            }
+        });
         FormInput.add(KdKamar);
-        KdKamar.setBounds(73, 100, 80, 23);
+        KdKamar.setBounds(70, 100, 80, 23);
 
         jLabel20.setText("Kamar :");
         jLabel20.setName("jLabel20"); // NOI18N
@@ -902,7 +908,7 @@ public class DlgPermintaanRanap extends javax.swing.JDialog {
             }
         });
         FormInput.add(dokterDPJP);
-        dokterDPJP.setBounds(680, 120, 228, 23);
+        dokterDPJP.setBounds(770, 120, 228, 23);
 
         btnDPJP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/190.png"))); // NOI18N
         btnDPJP.setMnemonic('3');
@@ -919,7 +925,18 @@ public class DlgPermintaanRanap extends javax.swing.JDialog {
             }
         });
         FormInput.add(btnDPJP);
-        btnDPJP.setBounds(910, 120, 28, 22);
+        btnDPJP.setBounds(1000, 120, 28, 22);
+
+        kdDokterDPJP.setEditable(false);
+        kdDokterDPJP.setHighlighter(null);
+        kdDokterDPJP.setName("kdDokterDPJP"); // NOI18N
+        kdDokterDPJP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                kdDokterDPJPActionPerformed(evt);
+            }
+        });
+        FormInput.add(kdDokterDPJP);
+        kdDokterDPJP.setBounds(680, 120, 80, 23);
 
         PanelInput.add(FormInput, java.awt.BorderLayout.CENTER);
 
@@ -1432,9 +1449,9 @@ private void ChkInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
             @Override
             public void windowClosed(WindowEvent e) {
                 if(dokter.getTable().getSelectedRow()!= -1){
-                    
+                    kdDokterDPJP.setText(dokter.getTable().getValueAt(dokter.getTable().getSelectedRow(),0).toString());
                     dokterDPJP.setText(dokter.getTable().getValueAt(dokter.getTable().getSelectedRow(),1).toString());
-                    
+                    kdDokterDPJP.requestFocus();
                 }
             }
             @Override
@@ -1465,6 +1482,14 @@ private void ChkInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     private void DokterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DokterActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_DokterActionPerformed
+
+    private void KdKamarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_KdKamarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_KdKamarActionPerformed
+
+    private void kdDokterDPJPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kdDokterDPJPActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_kdDokterDPJPActionPerformed
 
     /**
     * @param args the command line arguments
@@ -1546,6 +1571,7 @@ private void ChkInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     private widget.Label jLabel8;
     private widget.Label jLabel9;
     private javax.swing.JPanel jPanel3;
+    private widget.TextBox kdDokterDPJP;
     private widget.panelisi panelCari;
     private widget.panelisi panelGlass10;
     private widget.panelisi panelGlass8;
