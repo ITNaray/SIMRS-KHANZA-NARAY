@@ -35,6 +35,8 @@ import laporan.DlgCariPenyakit;
 import simrskhanza.DlgKamarInap;
 import rekammedis.RMRiwayatPerawatan;
 import surat.SuratPersetujuanRawatInap;
+import kepegawaian.DlgCariDokter;
+import kepegawaian.DlgCariDokter2;
 
 /**
  *
@@ -64,7 +66,7 @@ public class DlgPermintaanRanap extends javax.swing.JDialog {
 
         tabMode=new DefaultTableModel(null,new Object[]{
                 "No.Rawat","No.RM","Nama Pasien","J.K.","Umur","No.Telp","Cara Bayar","Asal Poli/Unit","Dokter Yang Memeriksa",
-                "Tanggal","No.Bad/Kamar","Kode Bangsal","Kamar Diminta","Tarif Kamar","Diagnosa Awal","Catatan","KodeDokter"
+                "Tanggal","No.Bad/Kamar","Kode Bangsal","Kamar Diminta","Tarif Kamar","Diagnosa Awal","Catatan","KodeDokter","Dokter DPJP"
             }){
               @Override public boolean isCellEditable(int rowIndex, int colIndex){return false;}
         };
@@ -113,6 +115,8 @@ public class DlgPermintaanRanap extends javax.swing.JDialog {
             }else if(i==16){
                 column.setMinWidth(0);
                 column.setMaxWidth(0);
+            }else if(i==17){
+                column.setPreferredWidth(250);
             }
         }
         tbObat.setDefaultRenderer(Object.class, new WarnaTable());
@@ -293,6 +297,9 @@ public class DlgPermintaanRanap extends javax.swing.JDialog {
         BtnSuratPermintaan = new widget.Button();
         BtnPersetujuanRanap = new widget.Button();
         BtnKamarInap = new widget.Button();
+        jLabel1 = new javax.swing.JLabel();
+        dokterDPJP = new widget.TextBox();
+        btnDPJP = new widget.Button();
         PanelAccor = new widget.PanelBiasa();
         ChkAccor = new widget.CekBox();
         ScrollMenu = new widget.ScrollPane();
@@ -547,7 +554,7 @@ public class DlgPermintaanRanap extends javax.swing.JDialog {
         R2.setPreferredSize(new java.awt.Dimension(165, 23));
         panelCari.add(R2);
 
-        DTPCari1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "01-07-2025" }));
+        DTPCari1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "01-12-2025" }));
         DTPCari1.setDisplayFormat("dd-MM-yyyy");
         DTPCari1.setName("DTPCari1"); // NOI18N
         DTPCari1.setOpaque(false);
@@ -570,7 +577,7 @@ public class DlgPermintaanRanap extends javax.swing.JDialog {
         jLabel25.setPreferredSize(new java.awt.Dimension(30, 23));
         panelCari.add(jLabel25);
 
-        DTPCari2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "01-07-2025" }));
+        DTPCari2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "01-12-2025" }));
         DTPCari2.setDisplayFormat("dd-MM-yyyy");
         DTPCari2.setName("DTPCari2"); // NOI18N
         DTPCari2.setOpaque(false);
@@ -638,7 +645,7 @@ public class DlgPermintaanRanap extends javax.swing.JDialog {
         NmPasien.setBounds(288, 10, 330, 23);
 
         DTPTgl.setForeground(new java.awt.Color(50, 70, 50));
-        DTPTgl.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "01-07-2025" }));
+        DTPTgl.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "01-12-2025" }));
         DTPTgl.setDisplayFormat("dd-MM-yyyy");
         DTPTgl.setName("DTPTgl"); // NOI18N
         DTPTgl.setOpaque(false);
@@ -696,6 +703,11 @@ public class DlgPermintaanRanap extends javax.swing.JDialog {
         Dokter.setEditable(false);
         Dokter.setHighlighter(null);
         Dokter.setName("Dokter"); // NOI18N
+        Dokter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                DokterActionPerformed(evt);
+            }
+        });
         FormInput.add(Dokter);
         Dokter.setBounds(73, 70, 318, 23);
 
@@ -795,7 +807,7 @@ public class DlgPermintaanRanap extends javax.swing.JDialog {
             }
         });
         FormInput.add(btnDiagnosa);
-        btnDiagnosa.setBounds(289, 130, 28, 23);
+        btnDiagnosa.setBounds(290, 130, 28, 23);
 
         BtnRiwayatPasien.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/item.png"))); // NOI18N
         BtnRiwayatPasien.setText("Riwayat Perawatan");
@@ -871,6 +883,43 @@ public class DlgPermintaanRanap extends javax.swing.JDialog {
         });
         FormInput.add(BtnKamarInap);
         BtnKamarInap.setBounds(910, 20, 160, 23);
+
+        jLabel1.setText("DPJP :");
+        jLabel1.setName("jLabel1"); // NOI18N
+        FormInput.add(jLabel1);
+        jLabel1.setBounds(640, 120, 37, 16);
+
+        dokterDPJP.setHighlighter(null);
+        dokterDPJP.setName("dokterDPJP"); // NOI18N
+        dokterDPJP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dokterDPJPActionPerformed(evt);
+            }
+        });
+        dokterDPJP.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                dokterDPJPKeyPressed(evt);
+            }
+        });
+        FormInput.add(dokterDPJP);
+        dokterDPJP.setBounds(680, 120, 228, 23);
+
+        btnDPJP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/190.png"))); // NOI18N
+        btnDPJP.setMnemonic('3');
+        btnDPJP.setToolTipText("Alt+3");
+        btnDPJP.setName("btnDPJP"); // NOI18N
+        btnDPJP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDPJPActionPerformed(evt);
+            }
+        });
+        btnDPJP.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                btnDPJPKeyPressed(evt);
+            }
+        });
+        FormInput.add(btnDPJP);
+        btnDPJP.setBounds(910, 120, 28, 22);
 
         PanelInput.add(FormInput, java.awt.BorderLayout.CENTER);
 
@@ -1368,6 +1417,55 @@ private void ChkInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         }
     }//GEN-LAST:event_BtnPersetujuanRanapActionPerformed
 
+    private void dokterDPJPKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dokterDPJPKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_dokterDPJPKeyPressed
+
+    private void btnDPJPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDPJPActionPerformed
+        // TODO add your handling code here:
+        DlgCariDokter dokter=new DlgCariDokter(null,false);
+        dokter.addWindowListener(new WindowListener() {
+            @Override
+            public void windowOpened(WindowEvent e) {}
+            @Override
+            public void windowClosing(WindowEvent e) {}
+            @Override
+            public void windowClosed(WindowEvent e) {
+                if(dokter.getTable().getSelectedRow()!= -1){
+                    
+                    dokterDPJP.setText(dokter.getTable().getValueAt(dokter.getTable().getSelectedRow(),1).toString());
+                    
+                }
+            }
+            @Override
+            public void windowIconified(WindowEvent e) {}
+            @Override
+            public void windowDeiconified(WindowEvent e) {}
+            @Override
+            public void windowActivated(WindowEvent e) {}
+            @Override
+            public void windowDeactivated(WindowEvent e) {}
+        });
+        dokter.emptTeks();
+        dokter.isCek();
+        dokter.setSize(internalFrame1.getWidth()-20,internalFrame1.getHeight()-20);
+        dokter.setLocationRelativeTo(internalFrame1);
+        dokter.setVisible(true);
+        
+    }//GEN-LAST:event_btnDPJPActionPerformed
+
+    private void btnDPJPKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnDPJPKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnDPJPKeyPressed
+
+    private void dokterDPJPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dokterDPJPActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_dokterDPJPActionPerformed
+
+    private void DokterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DokterActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_DokterActionPerformed
+
     /**
     * @param args the command line arguments
     */
@@ -1427,10 +1525,13 @@ private void ChkInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     private widget.ScrollPane Scroll;
     private widget.ScrollPane ScrollMenu;
     private widget.TextBox TCari;
+    private widget.Button btnDPJP;
     private widget.Button btnDiagnosa;
     private widget.Button btnKamar;
     private javax.swing.ButtonGroup buttonGroup1;
+    private widget.TextBox dokterDPJP;
     private widget.InternalFrame internalFrame1;
+    private javax.swing.JLabel jLabel1;
     private widget.Label jLabel10;
     private widget.Label jLabel11;
     private widget.Label jLabel12;
