@@ -78,12 +78,24 @@ public class DlgAntrian extends javax.swing.JDialog implements ActionListener{
 
         DlgDisplay = new javax.swing.JDialog();
         internalFrame5 = new widget.InternalFrame();
+        paneliklan = new usu.widget.glass.PanelGlass();
         panelruntext = new javax.swing.JPanel();
+        labelruntext = new widget.Label();
         form1 = new widget.InternalFrame();
+        labelantri1 = new widget.Label();
+        labelLoket = new widget.Label();
         internalFrame1 = new widget.InternalFrame();
         panelisi1 = new widget.panelisi();
+        BtnDisplay = new widget.Button();
+        BtnKeluar = new widget.Button();
         panelisi5 = new widget.panelisi();
+        BtnAntri1 = new widget.Button();
+        BtnBatal1 = new widget.Button();
+        label1 = new widget.Label();
         cmbloket = new widget.ComboBox();
+        label2 = new widget.Label();
+        Antrian = new widget.TextBox();
+        BtnBatal2 = new widget.Button();
 
         DlgDisplay.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         DlgDisplay.setModalExclusionType(java.awt.Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
@@ -96,10 +108,28 @@ public class DlgAntrian extends javax.swing.JDialog implements ActionListener{
         internalFrame5.setWarnaBawah(new java.awt.Color(250, 255, 250));
         internalFrame5.setLayout(new java.awt.BorderLayout());
 
+        paneliklan.setBackground(new java.awt.Color(250, 255, 250));
+        paneliklan.setBackgroundImage(new javax.swing.ImageIcon(getClass().getResource("/picture/coba.gif"))); // NOI18N
+        paneliklan.setBackgroundImageType(usu.widget.constan.BackgroundConstan.BACKGROUND_IMAGE_STRECT);
+        paneliklan.setPreferredSize(new java.awt.Dimension(200, 140));
+        paneliklan.setRound(false);
+        paneliklan.setWarna(new java.awt.Color(250, 255, 250));
+        paneliklan.setLayout(null);
+        internalFrame5.add(paneliklan, java.awt.BorderLayout.CENTER);
+
         panelruntext.setBackground(new java.awt.Color(250, 255, 250));
         panelruntext.setName("panelruntext"); // NOI18N
         panelruntext.setPreferredSize(new java.awt.Dimension(100, 100));
         panelruntext.setLayout(new java.awt.BorderLayout());
+
+        labelruntext.setBackground(new java.awt.Color(250, 255, 250));
+        labelruntext.setForeground(new java.awt.Color(50, 100, 50));
+        labelruntext.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        labelruntext.setFont(new java.awt.Font("Tahoma", 0, 35)); // NOI18N
+        labelruntext.setName("labelruntext"); // NOI18N
+        labelruntext.setPreferredSize(new java.awt.Dimension(853, 50));
+        panelruntext.add(labelruntext, java.awt.BorderLayout.CENTER);
+
         internalFrame5.add(panelruntext, java.awt.BorderLayout.PAGE_END);
 
         DlgDisplay.getContentPane().add(internalFrame5, java.awt.BorderLayout.CENTER);
@@ -110,6 +140,28 @@ public class DlgAntrian extends javax.swing.JDialog implements ActionListener{
         form1.setPreferredSize(new java.awt.Dimension(550, 150));
         form1.setWarnaBawah(new java.awt.Color(250, 255, 250));
         form1.setLayout(new java.awt.GridLayout(2, 0));
+
+        labelantri1.setBackground(new java.awt.Color(250, 255, 250));
+        labelantri1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(150, 250, 150)), "No.Antrian :", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 32), new java.awt.Color(50, 100, 50))); // NOI18N
+        labelantri1.setForeground(new java.awt.Color(50, 100, 50));
+        labelantri1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        labelantri1.setText("1");
+        labelantri1.setFont(new java.awt.Font("Tahoma", 1, 200)); // NOI18N
+        labelantri1.setName("labelantri1"); // NOI18N
+        labelantri1.setPreferredSize(new java.awt.Dimension(300, 50));
+        form1.add(labelantri1);
+
+        labelLoket.setBackground(new java.awt.Color(250, 255, 250));
+        labelLoket.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(150, 250, 150)), "Loket :", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 32), new java.awt.Color(50, 100, 50))); // NOI18N
+        labelLoket.setForeground(new java.awt.Color(50, 100, 50));
+        labelLoket.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        labelLoket.setText("1");
+        labelLoket.setFocusable(false);
+        labelLoket.setFont(new java.awt.Font("Tahoma", 1, 200)); // NOI18N
+        labelLoket.setName("labelLoket"); // NOI18N
+        labelLoket.setPreferredSize(new java.awt.Dimension(150, 50));
+        form1.add(labelLoket);
+
         DlgDisplay.getContentPane().add(form1, java.awt.BorderLayout.LINE_END);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -133,16 +185,105 @@ public class DlgAntrian extends javax.swing.JDialog implements ActionListener{
         panelisi1.setName("panelisi1"); // NOI18N
         panelisi1.setPreferredSize(new java.awt.Dimension(55, 55));
         panelisi1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 5, 9));
+
+        BtnDisplay.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/editcopy.png"))); // NOI18N
+        BtnDisplay.setMnemonic('D');
+        BtnDisplay.setText("Display");
+        BtnDisplay.setToolTipText("Alt+D");
+        BtnDisplay.setIconTextGap(3);
+        BtnDisplay.setName("BtnDisplay"); // NOI18N
+        BtnDisplay.setPreferredSize(new java.awt.Dimension(100, 30));
+        BtnDisplay.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnDisplayActionPerformed(evt);
+            }
+        });
+        panelisi1.add(BtnDisplay);
+
+        BtnKeluar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/exit.png"))); // NOI18N
+        BtnKeluar.setMnemonic('K');
+        BtnKeluar.setText("Keluar");
+        BtnKeluar.setToolTipText("Alt+K");
+        BtnKeluar.setIconTextGap(3);
+        BtnKeluar.setName("BtnKeluar"); // NOI18N
+        BtnKeluar.setPreferredSize(new java.awt.Dimension(100, 30));
+        BtnKeluar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnKeluarActionPerformed(evt);
+            }
+        });
+        panelisi1.add(BtnKeluar);
+
         internalFrame1.add(panelisi1, java.awt.BorderLayout.PAGE_END);
 
         panelisi5.setName("panelisi5"); // NOI18N
         panelisi5.setPreferredSize(new java.awt.Dimension(12, 44));
         panelisi5.setLayout(null);
 
+        BtnAntri1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/Agenda-1-16x16.png"))); // NOI18N
+        BtnAntri1.setMnemonic('7');
+        BtnAntri1.setText("Antri");
+        BtnAntri1.setToolTipText("Alt+7");
+        BtnAntri1.setIconTextGap(3);
+        BtnAntri1.setName("BtnAntri1"); // NOI18N
+        BtnAntri1.setPreferredSize(new java.awt.Dimension(100, 30));
+        BtnAntri1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnAntri1ActionPerformed(evt);
+            }
+        });
+        panelisi5.add(BtnAntri1);
+        BtnAntri1.setBounds(20, 60, 100, 30);
+
+        BtnBatal1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/cross.png"))); // NOI18N
+        BtnBatal1.setMnemonic('8');
+        BtnBatal1.setText("Reset");
+        BtnBatal1.setToolTipText("Alt+8");
+        BtnBatal1.setIconTextGap(3);
+        BtnBatal1.setName("BtnBatal1"); // NOI18N
+        BtnBatal1.setPreferredSize(new java.awt.Dimension(100, 30));
+        BtnBatal1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnBatal1ActionPerformed(evt);
+            }
+        });
+        panelisi5.add(BtnBatal1);
+        BtnBatal1.setBounds(130, 60, 100, 30);
+
+        label1.setText("Antrian :");
+        label1.setName("label1"); // NOI18N
+        panelisi5.add(label1);
+        label1.setBounds(145, 12, 60, 23);
+
         cmbloket.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9" }));
         cmbloket.setName("cmbloket"); // NOI18N
         panelisi5.add(cmbloket);
         cmbloket.setBounds(65, 12, 60, 23);
+
+        label2.setText("Loket :");
+        label2.setName("label2"); // NOI18N
+        panelisi5.add(label2);
+        label2.setBounds(0, 12, 60, 23);
+
+        Antrian.setText("1");
+        Antrian.setName("Antrian"); // NOI18N
+        panelisi5.add(Antrian);
+        Antrian.setBounds(210, 12, 60, 24);
+
+        BtnBatal2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/Cancel-2-16x16.png"))); // NOI18N
+        BtnBatal2.setMnemonic('8');
+        BtnBatal2.setText("Stop");
+        BtnBatal2.setToolTipText("Alt+8");
+        BtnBatal2.setIconTextGap(3);
+        BtnBatal2.setName("BtnBatal2"); // NOI18N
+        BtnBatal2.setPreferredSize(new java.awt.Dimension(100, 30));
+        BtnBatal2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnBatal2ActionPerformed(evt);
+            }
+        });
+        panelisi5.add(BtnBatal2);
+        BtnBatal2.setBounds(20, 100, 100, 30);
 
         internalFrame1.add(panelisi5, java.awt.BorderLayout.CENTER);
 
@@ -250,11 +391,23 @@ public class DlgAntrian extends javax.swing.JDialog implements ActionListener{
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private widget.TextBox Antrian;
+    private widget.Button BtnAntri1;
+    private widget.Button BtnBatal1;
+    private widget.Button BtnBatal2;
+    private widget.Button BtnDisplay;
+    private widget.Button BtnKeluar;
     private javax.swing.JDialog DlgDisplay;
     private widget.ComboBox cmbloket;
     private widget.InternalFrame form1;
     private widget.InternalFrame internalFrame1;
     private widget.InternalFrame internalFrame5;
+    private widget.Label label1;
+    private widget.Label label2;
+    private widget.Label labelLoket;
+    private widget.Label labelantri1;
+    private widget.Label labelruntext;
+    private usu.widget.glass.PanelGlass paneliklan;
     private widget.panelisi panelisi1;
     private widget.panelisi panelisi5;
     private javax.swing.JPanel panelruntext;

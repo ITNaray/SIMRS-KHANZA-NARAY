@@ -2333,7 +2333,7 @@ public final class DlgRawatJalan extends javax.swing.JDialog {
     panelGlass12.add(jLabel22);
     jLabel22.setBounds(120, 295, 70, 23);
 
-        scrollPane1.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.RED, 1));
+        scrollPane1.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.BLACK, 1));
         scrollPane1.setName("scrollPane1"); 
 
     TKeluhan.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -2363,7 +2363,7 @@ public final class DlgRawatJalan extends javax.swing.JDialog {
     // align Plan label with Objek (same row)
     jLabel26.setBounds(565, 150, 90, 23);
 
-        scrollPane2.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.RED, 1));
+        scrollPane2.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.BLACK, 1));
         scrollPane2.setName("scrollPane2"); 
 
     TPemeriksaan.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -2462,7 +2462,7 @@ public final class DlgRawatJalan extends javax.swing.JDialog {
         panelGlass12.add(TAlergi);
         TAlergi.setBounds(697, 10, 206, 23);
 
-        scrollPane3.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.RED, 1));
+        scrollPane3.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.BLACK, 1));
         scrollPane3.setName("scrollPane3"); 
 
     TPenilaian.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -2498,7 +2498,7 @@ public final class DlgRawatJalan extends javax.swing.JDialog {
         }
     });
 
-    scrollPane6.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.RED,1));
+    scrollPane6.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.BLACK,1));
     scrollPane6.setName("scrollPane6"); 
 
     TindakLanjut.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -2583,7 +2583,7 @@ public final class DlgRawatJalan extends javax.swing.JDialog {
     // place Instruksi below Plan and vitals (right column)
     jLabel53.setBounds(565, 250, 90, 23);
 
-        scrollPane7.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.RED,1));
+        scrollPane7.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.BLACK,1));
         scrollPane7.setName("scrollPane7"); 
 
         TInstruksi.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -2622,7 +2622,7 @@ public final class DlgRawatJalan extends javax.swing.JDialog {
     // place Evaluasi below Instruksi (right column)
     jLabel56.setBounds(565, 320, 90, 23);
 
-        scrollPane8.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.RED,1));
+        scrollPane8.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.BLACK,1));
         scrollPane8.setName("scrollPane8"); 
 
         TEvaluasi.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));

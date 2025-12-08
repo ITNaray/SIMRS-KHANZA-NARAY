@@ -2186,14 +2186,12 @@ public final class DlgRawatInap extends javax.swing.JDialog {
 
         jLabel8.setText("Subjek :");
         jLabel8.setName("jLabel8"); // NOI18N
-        jLabel8.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 16));
         panelGlass12.add(jLabel8);
         jLabel8.setBounds(0, 70, 70, 23);
 
         jLabel9.setText("Objek :");
         jLabel9.setName("jLabel9"); // NOI18N
         panelGlass12.add(jLabel9);
-        jLabel8.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 16));
         jLabel9.setBounds(0, 148, 70, 23);
 
         scrollPane3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -2215,13 +2213,11 @@ public final class DlgRawatInap extends javax.swing.JDialog {
 
         jLabel37.setText("Asesmen :");
         jLabel37.setName("jLabel37"); // NOI18N
-        jLabel8.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 16));
         panelGlass12.add(jLabel37);
         jLabel37.setBounds(617, 70, 70, 23);
 
         jLabel26.setText("Plan :");
         jLabel26.setName("jLabel26"); // NOI18N
-        jLabel8.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 16));
         panelGlass12.add(jLabel26);
         jLabel26.setBounds(617, 148, 70, 23);
 
@@ -2289,7 +2285,6 @@ public final class DlgRawatInap extends javax.swing.JDialog {
         jLabel55.setText("Instruksi :");
         jLabel55.setName("jLabel55"); // NOI18N
         panelGlass12.add(jLabel55);
-        jLabel8.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 16));
         jLabel55.setBounds(617, 250, 70, 23);
 
         scrollPane7.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -2478,6 +2473,24 @@ public final class DlgRawatInap extends javax.swing.JDialog {
         jLabel61.setName("jLabel61"); // NOI18N
         panelGlass12.add(jLabel61);
         jLabel61.setBounds(296, 275, 79, 23);
+        
+        // FITUR YANG MEGATUR UNTUK MENAMBAHKAN KOLOM BUTTON FUNGSI BARU
+        panelGlass12.add(BtnResume);
+        BtnResume.setBounds(1230, 70, 120,30);
+        BtnResume.setText("Resume Pasien");
+        BtnResume.setFocusPainted(false);
+        BtnResume.setFont(new java.awt.Font("Tahoma", 0, 11)); 
+        BtnResume.setGlassColor(new java.awt.Color(255, 255, 255));
+        BtnResume.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        BtnResume.setMargin(new java.awt.Insets(1, 1, 1, 1));
+        BtnResume.setName("BtnResume"); 
+        BtnResume.setPreferredSize(new java.awt.Dimension(190, 23));
+        BtnResume.setRoundRect(true);
+        BtnResume.addActionListener(new java.awt.event.ActionListener() {
+          public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnResumeActionPerformed(evt);
+            }
+        });
 
         PanelInput1.add(panelGlass12, java.awt.BorderLayout.CENTER);
 
@@ -3583,21 +3596,7 @@ public final class DlgRawatInap extends javax.swing.JDialog {
             }
         });
 
-        BtnResume.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/item.png"))); // NOI18N
-        BtnResume.setText("Resume Pasien");
-        BtnResume.setFocusPainted(false);
-        BtnResume.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
-        BtnResume.setGlassColor(new java.awt.Color(255, 255, 255));
-        BtnResume.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        BtnResume.setMargin(new java.awt.Insets(1, 1, 1, 1));
-        BtnResume.setName("BtnResume"); // NOI18N
-        BtnResume.setPreferredSize(new java.awt.Dimension(190, 23));
-        BtnResume.setRoundRect(false);
-        BtnResume.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BtnResumeActionPerformed(evt);
-            }
-        });
+
 
         BtnAwalKeperawatanUmum.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/item.png"))); // NOI18N
         BtnAwalKeperawatanUmum.setText("Awal Keperawatan Umum");
@@ -6833,22 +6832,70 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
         Valid.pindah2(evt,TPenilaian,TInstruksi);
     }//GEN-LAST:event_TindakLanjutKeyPressed
 
-    private void BtnResumeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnResumeActionPerformed
-        if(TNoRw.getText().trim().equals("")){
-            JOptionPane.showMessageDialog(null,"Maaf, Silahkan anda pilih dulu dengan menklik data pada table...!!!");
-            TCari.requestFocus();
-        }else{ 
-            this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            RMDataResumePasienRanap resume=new RMDataResumePasienRanap(null,false);
-            resume.isCek();
-            resume.setSize(internalFrame1.getWidth()-20,internalFrame1.getHeight()-20);
-            resume.setLocationRelativeTo(internalFrame1);
-            resume.setNoRm(TNoRw.getText(),DTPCari2.getDate());
-            resume.tampil();
-            resume.setVisible(true);
-            this.setCursor(Cursor.getDefaultCursor());
-        }
-    }//GEN-LAST:event_BtnResumeActionPerformed
+    private void BtnResumeActionPerformed(java.awt.event.ActionEvent evt) {
+    if(TNoRw.getText().trim().equals("")){
+        JOptionPane.showMessageDialog(null,"Maaf, Silahkan anda pilih dulu dengan mengklik data pada table...!!!");
+        TCari.requestFocus();
+    }else{ 
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        RMDataResumePasienRanap resume=new RMDataResumePasienRanap(null,false);
+        resume.isCek();
+        resume.setSize(internalFrame1.getWidth()-20,internalFrame1.getHeight()-20);
+        resume.setLocationRelativeTo(internalFrame1);
+        resume.setNoRm(TNoRw.getText(),DTPCari2.getDate());
+        resume.tampil();
+        resume.setVisible(true);
+        this.setCursor(Cursor.getDefaultCursor());
+
+        // update UI setelah ditutup
+        resume.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent e) {
+                updateResumeRanapUI();
+            }
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                updateResumeRanapUI();
+            }
+        });
+    }
+}
+
+    
+    private void updateResumeRanapUI() {
+    String norawat = TNoRw.getText().trim();
+
+    if(norawat.equals("")){
+        BtnResume.setText("Resume Ranap");
+        BtnResume.setEnabled(false);
+        BtnResume.setGlassColor(new java.awt.Color(240,240,240));
+        return;
+    }
+
+    // cek resume rawat inap
+    int jml = Sequel.cariInteger(
+        "SELECT COUNT(*) FROM resume_pasien_ranap WHERE no_rawat=?", 
+        norawat
+    );
+
+    if(jml > 0){
+        // ✔ Resume SUDAH ada
+        BtnResume.setText("Lihat Resume");
+        BtnResume.setEnabled(true);
+        BtnResume.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/accept.png")));
+        BtnResume.setGlassColor(new java.awt.Color(204,255,204)); 
+        BtnResume.setRoundRect(true);
+    } else {
+        // ✖ Resume BELUM ada
+        BtnResume.setText("Buat Resume");
+        BtnResume.setEnabled(true);
+        BtnResume.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/cancel.png")));
+        BtnResume.setGlassColor(new java.awt.Color(255,230,230)); 
+        BtnResume.setRoundRect(true);
+    }
+}
+
+    
 
     private void BtnAsuhanGiziActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnAsuhanGiziActionPerformed
         if(TNoRw.getText().trim().equals("")){
@@ -9361,6 +9408,9 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
         ChkInput1.setSelected(true);
         isForm2(); 
         TabRawatMouseClicked(null);
+        //untuk tampilan resume 
+        updateResumeRanapUI();
+
     }
     
     public void setKamar(String kamar) {
@@ -10630,7 +10680,7 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
         FormMenu.add(BtnSKDP);
         FormMenu.add(BtnRujukKeluar);
         FormMenu.add(BtnDiagnosa);
-        FormMenu.add(BtnResume);
+        //FormMenu.add(BtnResume);
         FormMenu.add(BtnAwalKeperawatanUmum);
         FormMenu.add(BtnAwalKeperawatanKandungan);
         FormMenu.add(BtnAwalKeperawatanNeonatus);

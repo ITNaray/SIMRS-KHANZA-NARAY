@@ -4739,6 +4739,65 @@ private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
         }else if((chkPolri.isSelected()==true)&&nmjabatanpolri.getText().trim().equals("")){
             Valid.textKosong(nmjabatanpolri,"Jabatan POLRI");
         }else{
+                        // Ambil input
+            String inputNama = TNm.getText().trim();
+            String inputNik = TKtp.getText().trim();
+            String inputTglLahir = Valid.SetTgl(DTPLahir.getSelectedItem()+"");
+
+            // Pertama cek apakah pasien sudah ada berdasarkan NIK + Tgl Lahir
+            int jumlah = Sequel.cariInteger(
+                "SELECT COUNT(*) FROM pasien WHERE no_ktp=? AND tgl_lahir=?",
+                inputNik, inputTglLahir
+            );
+
+            if(jumlah > 0){
+                // Ambil nama asli dari database karena cariIsi tidak ada
+                String namaDatabase = "";
+
+                try {
+                    PreparedStatement ps = koneksi.prepareStatement(
+                        "SELECT nm_pasien FROM pasien WHERE no_ktp=? AND tgl_lahir=? LIMIT 1"
+                    );
+                    ps.setString(1, inputNik);
+                    ps.setString(2, inputTglLahir);
+
+                    ResultSet rs = ps.executeQuery();
+                    if(rs.next()){
+                        namaDatabase = rs.getString("nm_pasien");
+                    }
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Error mengambil nama pasien: " + e);
+                }
+
+                // Tampilkan notifikasi yang lebih rapi dan jelas
+                String pesan = 
+                        "⚠ PERINGATAN: DATA PASIEN SUDAH TERDAFTAR!\n" +
+                        
+                        "Data Pasien di Database:\n" +
+                        "   • Nama          : " + namaDatabase + "\n" +
+                        "   • NIK           : " + inputNik + "\n" +
+                        "   • Tanggal Lahir : " + inputTglLahir + "\n" +
+                        
+                        "Data yang Anda Input:\n" +
+                        "   • Nama Input    : " + inputNama + "\n" +
+                        
+                        "Catatan:\n" +
+                        "Kemungkinan terjadi kesalahan pengetikan (TYPO) pada nama.\n" +
+                        "Silakan periksa kembali sebelum melanjutkan.\n" 
+                        ;
+
+                JOptionPane.showMessageDialog(
+                        null,
+                        pesan,
+                        "Peringatan Duplikasi Data Pasien",
+                        JOptionPane.PLAIN_MESSAGE
+                );
+
+                return;
+            }
+
+
+            // ⬆⬆⬆ Sampai sini (baru setelah itu proses simpan dijalankan)
             if(Kelurahan.isEditable()==true){
                 Sequel.queryu4("insert ignore into kelurahan values(?,?)",2,new String[]{"0",Kelurahan.getText()});
                 kdkel=kel.tampil3(Kelurahan.getText());
@@ -10089,59 +10148,109 @@ private void KabupatenMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:eve
         }
     }
 
-    private void autoNomor() {  
-        if(Kd2.getText().equals("")){
-            if(ChkRM.isSelected()==true){
-                if(tahun.equals("Yes")){
-                    awalantahun=DTPDaftar.getSelectedItem().toString().substring(8,10);
-                }else{
-                    awalantahun="";
-                }
-
-                if(bulan.equals("Yes")){
-                    awalanbulan=DTPDaftar.getSelectedItem().toString().substring(3,5);
-                }else{
-                    awalanbulan="";
-                }
-
-                if(posisitahun.equals("Depan")){
-                    switch (pengurutan) {
-                        case "Straight":
-                            Valid.autoNomer3("select ifnull(MAX(CONVERT(RIGHT(set_no_rkm_medis.no_rkm_medis,6),signed)),0) from set_no_rkm_medis","",6,NoRm);
-                            break;
-                        case "Terminal":
-                            Valid.autoNomer4("select ifnull(MAX(CONVERT(CONCAT(SUBSTRING(RIGHT(set_no_rkm_medis.no_rkm_medis,6),5,2),SUBSTRING(RIGHT(set_no_rkm_medis.no_rkm_medis,6),3,2),SUBSTRING(RIGHT(set_no_rkm_medis.no_rkm_medis,6),1,2)),signed)),0) from set_no_rkm_medis","",6,NoRm);
-                            break;
-                        case "Middle":
-                            Valid.autoNomer5("select ifnull(MAX(CONVERT(CONCAT(SUBSTRING(RIGHT(set_no_rkm_medis.no_rkm_medis,6),3,2),SUBSTRING(RIGHT(set_no_rkm_medis.no_rkm_medis,6),1,2),SUBSTRING(RIGHT(set_no_rkm_medis.no_rkm_medis,6),5,2)),signed)),0) from set_no_rkm_medis","",6,NoRm);
-                            break;
-                    }
-                }else if(posisitahun.equals("Belakang")){
-                    switch (pengurutan) {
-                        case "Straight":
-                            Valid.autoNomer3("select ifnull(MAX(CONVERT(LEFT(set_no_rkm_medis.no_rkm_medis,6),signed)),0) from set_no_rkm_medis","",6,NoRm);
-                            break;
-                        case "Terminal":
-                            Valid.autoNomer4("select ifnull(MAX(CONVERT(CONCAT(SUBSTRING(LEFT(set_no_rkm_medis.no_rkm_medis,6),5,2),SUBSTRING(LEFT(set_no_rkm_medis.no_rkm_medis,6),3,2),SUBSTRING(LEFT(set_no_rkm_medis.no_rkm_medis,6),1,2)),signed)),0) from set_no_rkm_medis","",6,NoRm);
-                            break;
-                        case "Middle":
-                            Valid.autoNomer5("select ifnull(MAX(CONVERT(CONCAT(SUBSTRING(LEFT(set_no_rkm_medis.no_rkm_medis,6),3,2),SUBSTRING(LEFT(set_no_rkm_medis.no_rkm_medis,6),1,2),SUBSTRING(LEFT(set_no_rkm_medis.no_rkm_medis,6),5,2)),signed)),0) from set_no_rkm_medis","",6,NoRm);
-                            break;
-                    }            
-                }
-
-                if(posisitahun.equals("Depan")){
-                    TNo.setText(awalantahun+awalanbulan+NoRm.getText());
-                }else if(posisitahun.equals("Belakang")){
-                    if(!(awalanbulan+awalantahun).equals("")){
-                        TNo.setText(NoRm.getText()+"-"+awalanbulan+awalantahun);
-                    }else{
-                        TNo.setText(NoRm.getText());
-                    }            
-                }
-            }
-        }
+//    private void autoNomor() {  
+//        if(Kd2.getText().equals("")){
+//            if(ChkRM.isSelected()==true){
+//                if(tahun.equals("Yes")){
+//                    awalantahun=DTPDaftar.getSelectedItem().toString().substring(8,10);
+//                }else{
+//                    awalantahun="";
+//                }
+//
+//                if(bulan.equals("Yes")){
+//                    awalanbulan=DTPDaftar.getSelectedItem().toString().substring(3,5);
+//                }else{
+//                    awalanbulan="";
+//                }
+//
+//                if(posisitahun.equals("Depan")){
+//                    switch (pengurutan) {
+//                        case "Straight":
+//                            Valid.autoNomer3("select ifnull(MAX(CONVERT(RIGHT(set_no_rkm_medis.no_rkm_medis,6),signed)),0) from set_no_rkm_medis","",6,NoRm);
+//                            break;
+//                        case "Terminal":
+//                            Valid.autoNomer4("select ifnull(MAX(CONVERT(CONCAT(SUBSTRING(RIGHT(set_no_rkm_medis.no_rkm_medis,6),5,2),SUBSTRING(RIGHT(set_no_rkm_medis.no_rkm_medis,6),3,2),SUBSTRING(RIGHT(set_no_rkm_medis.no_rkm_medis,6),1,2)),signed)),0) from set_no_rkm_medis","",6,NoRm);
+//                            break;
+//                        case "Middle":
+//                            Valid.autoNomer5("select ifnull(MAX(CONVERT(CONCAT(SUBSTRING(RIGHT(set_no_rkm_medis.no_rkm_medis,6),3,2),SUBSTRING(RIGHT(set_no_rkm_medis.no_rkm_medis,6),1,2),SUBSTRING(RIGHT(set_no_rkm_medis.no_rkm_medis,6),5,2)),signed)),0) from set_no_rkm_medis","",6,NoRm);
+//                            break;
+//                    }
+//                }else if(posisitahun.equals("Belakang")){
+//                    switch (pengurutan) {
+//                        case "Straight":
+//                            Valid.autoNomer3("select ifnull(MAX(CONVERT(LEFT(set_no_rkm_medis.no_rkm_medis,6),signed)),0) from set_no_rkm_medis","",6,NoRm);
+//                            break;
+//                        case "Terminal":
+//                            Valid.autoNomer4("select ifnull(MAX(CONVERT(CONCAT(SUBSTRING(LEFT(set_no_rkm_medis.no_rkm_medis,6),5,2),SUBSTRING(LEFT(set_no_rkm_medis.no_rkm_medis,6),3,2),SUBSTRING(LEFT(set_no_rkm_medis.no_rkm_medis,6),1,2)),signed)),0) from set_no_rkm_medis","",6,NoRm);
+//                            break;
+//                        case "Middle":
+//                            Valid.autoNomer5("select ifnull(MAX(CONVERT(CONCAT(SUBSTRING(LEFT(set_no_rkm_medis.no_rkm_medis,6),3,2),SUBSTRING(LEFT(set_no_rkm_medis.no_rkm_medis,6),1,2),SUBSTRING(LEFT(set_no_rkm_medis.no_rkm_medis,6),5,2)),signed)),0) from set_no_rkm_medis","",6,NoRm);
+//                            break;
+//                    }            
+//                }
+//
+//                if(posisitahun.equals("Depan")){
+//                    TNo.setText(awalantahun+awalanbulan+NoRm.getText());
+//                }else if(posisitahun.equals("Belakang")){
+//                    if(!(awalanbulan+awalantahun).equals("")){
+//                        TNo.setText(NoRm.getText()+"-"+awalanbulan+awalantahun);
+//                    }else{
+//                        TNo.setText(NoRm.getText());
+//                    }            
+//                }
+//            }
+//        }
+//    }
+    
+    // Fungsi antrian baru untuk perbaikan pada nomer rm yang belum otomatis
+    private void autoNomor() {
+    if (!ChkRM.isSelected()) {
+        return;
     }
+
+    TNo.setEditable(false);
+    TNo.setBackground(new Color(245,250,240));
+
+    try {
+        // 1. Cari nomor RM yang hilang (gap)
+        String missingRM = Sequel.cariIsi(
+            "SELECT LPAD(t1.no + 1, 6, '0') AS missing_rm " +
+            "FROM (" +
+            "   SELECT CAST(no_rkm_medis AS UNSIGNED) AS no FROM pasien" +
+            ") t1 " +
+            "LEFT JOIN (" +
+            "   SELECT CAST(no_rkm_medis AS UNSIGNED) AS no FROM pasien" +
+            ") t2 ON t2.no = t1.no + 1 " +
+            "WHERE t2.no IS NULL " +
+            "ORDER BY t1.no " +
+            "LIMIT 1"
+        );
+
+        // 2. Jika ada nomor kosong → gunakan nomor itu
+        if (missingRM != null && !missingRM.equals("") && !missingRM.equals("000000")) {
+            TNo.setText(missingRM);
+            return;
+        }
+
+        // 3. Jika tidak ada gap → ambil RM terbesar + 1
+        String lastRM = Sequel.cariIsi("SELECT MAX(no_rkm_medis) FROM pasien");
+
+        if (lastRM == null || lastRM.equals("")) {
+            lastRM = "000000"; // database kosong
+        }
+
+        int nomor = Integer.parseInt(lastRM);
+        nomor++;
+
+        String nextRM = String.format("%06d", nomor);
+
+        TNo.setText(nextRM);
+
+    } catch (Exception e) {
+        System.out.println("Error autoNomor: " + e.getMessage());
+    }
+}
+
     
     public void setPasien(String NamaPasien,String Kontak,String Alamat,
             String TempatLahir,String TglLahir,String JK,String NoKartuJKN,String NIK){

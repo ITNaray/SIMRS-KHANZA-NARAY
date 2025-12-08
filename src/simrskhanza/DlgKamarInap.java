@@ -224,7 +224,8 @@ public class DlgKamarInap extends javax.swing.JDialog {
 
         //tbObat.setDefaultRenderer(Object.class, new WarnaTable(panelJudul.getBackground(),tbObat.getBackground()));
         tbKamIn.setPreferredScrollableViewportSize(new Dimension(500,500));
-        tbKamIn.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        tbKamIn.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+
 
         for (i = 0; i < 23; i++) {
             TableColumn column = tbKamIn.getColumnModel().getColumn(i);
@@ -234,43 +235,44 @@ public class DlgKamarInap extends javax.swing.JDialog {
                 column.setMinWidth(0);
                 column.setMaxWidth(0);
                 column.setPreferredWidth(0);
-            }else if(i==0){
-                column.setPreferredWidth(105);
-            }else if(i==1){
-                column.setPreferredWidth(70);
-            }else if(i==2){
-                column.setPreferredWidth(170);
-            }else if(i==3){
-                column.setPreferredWidth(150);
-            }else if(i==6){
-                column.setPreferredWidth(80);
-            }else if(i==7){
-                column.setPreferredWidth(150);
-            }else if(i==9){
-                column.setPreferredWidth(90);
-            }else if(i==10){
-                column.setPreferredWidth(90);
-            }else if(i==11){
-                column.setPreferredWidth(70);
-            }else if(i==12){
-                column.setPreferredWidth(60);
-            }else if(i==13){
-                column.setPreferredWidth(70);
-            }else if(i==14){
-                column.setPreferredWidth(60);
-            }else if(i==16){
-                column.setPreferredWidth(75);
-            }else if(i==17){
-                column.setPreferredWidth(40);
-            }else if(i==18){
-                column.setPreferredWidth(130); // Dokter P.J.
-            }else if(i==19){
-                column.setPreferredWidth(130); // DPJP
-            }else if(i==21){
-                column.setPreferredWidth(60);  // Status Bayar
-            }else if(i==22){
-                column.setPreferredWidth(60);  // Agama
             }
+//               else if(i==0){
+//                column.setPreferredWidth(105);
+//            }else if(i==1){
+//                column.setPreferredWidth(70);
+//            }else if(i==2){
+//                column.setPreferredWidth(170);
+//            }else if(i==3){
+//                column.setPreferredWidth(150);
+//            }else if(i==6){
+//                column.setPreferredWidth(80);
+//            }else if(i==7){
+//                column.setPreferredWidth(150);
+//            }else if(i==9){
+//                column.setPreferredWidth(90);
+//            }else if(i==10){
+//                column.setPreferredWidth(90);
+//            }else if(i==11){
+//                column.setPreferredWidth(70);
+//            }else if(i==12){
+//                column.setPreferredWidth(60);
+//            }else if(i==13){
+//                column.setPreferredWidth(70);
+//            }else if(i==14){
+//                column.setPreferredWidth(60);
+//            }else if(i==16){
+//                column.setPreferredWidth(75);
+//            }else if(i==17){
+//                column.setPreferredWidth(75);
+//            }else if(i==18){
+//                column.setPreferredWidth(130); // Dokter P.J.
+//            }else if(i==19){
+//                column.setPreferredWidth(130); // DPJP
+//            }else if(i==21){
+//                column.setPreferredWidth(60);  // Status Bayar
+//            }else if(i==22){
+//                column.setPreferredWidth(60);  // Agama
+//            }
         }
 
         tbKamIn.setDefaultRenderer(Object.class, new WarnaTable());

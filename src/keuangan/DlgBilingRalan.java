@@ -779,7 +779,6 @@ public class DlgBilingRalan extends javax.swing.JDialog {
         BtnCari = new widget.Button();
         jLabel4 = new widget.Label();
         DTPTgl = new widget.Tanggal();
-        jSplitPane1 = new javax.swing.JSplitPane();
         TabRawat = new javax.swing.JTabbedPane();
         Scroll = new widget.ScrollPane();
         tbBilling = new widget.Table();
@@ -812,7 +811,6 @@ public class DlgBilingRalan extends javax.swing.JDialog {
         btnCariPiutang = new widget.Button();
         BtnAll = new widget.Button();
         BtnAll1 = new widget.Button();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
         panelPermintaan = new widget.panelisi();
         scrollPane5 = new widget.ScrollPane();
         tbLab = new widget.Table();
@@ -1776,7 +1774,7 @@ public class DlgBilingRalan extends javax.swing.JDialog {
         jLabel4.setPreferredSize(new java.awt.Dimension(65, 23));
         panelGlass1.add(jLabel4);
 
-        DTPTgl.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "22-11-2025 22:50:18" }));
+        DTPTgl.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "12-08-2023 01:32:33" }));
         DTPTgl.setDisplayFormat("dd-MM-yyyy HH:mm:ss");
         DTPTgl.setName("DTPTgl"); // NOI18N
         DTPTgl.setOpaque(false);
@@ -1789,10 +1787,6 @@ public class DlgBilingRalan extends javax.swing.JDialog {
         panelGlass1.add(DTPTgl);
 
         internalFrame1.add(panelGlass1, java.awt.BorderLayout.PAGE_START);
-
-        jSplitPane1.setBackground(new java.awt.Color(255, 255, 255));
-        jSplitPane1.setMinimumSize(new java.awt.Dimension(516, 277));
-        jSplitPane1.setName("jSplitPane1"); // NOI18N
 
         TabRawat.setBackground(new java.awt.Color(255, 255, 253));
         TabRawat.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(241, 246, 236)));
@@ -2174,12 +2168,6 @@ public class DlgBilingRalan extends javax.swing.JDialog {
 
         TabRawat.addTab("Pembayaran", scrollPane8);
 
-        jSplitPane1.setLeftComponent(TabRawat);
-
-        jTabbedPane1.setBackground(new java.awt.Color(255, 255, 255));
-        jTabbedPane1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(241, 246, 236)));
-        jTabbedPane1.setName("jTabbedPane1"); // NOI18N
-
         panelPermintaan.setBorder(null);
         panelPermintaan.setName("panelPermintaan"); // NOI18N
         panelPermintaan.setPreferredSize(new java.awt.Dimension(100, 137));
@@ -2251,11 +2239,9 @@ public class DlgBilingRalan extends javax.swing.JDialog {
 
         panelPermintaan.add(scrollPane7);
 
-        jTabbedPane1.addTab("Status Permintaan", panelPermintaan);
+        TabRawat.addTab("Status Permintaan", panelPermintaan);
 
-        jSplitPane1.setRightComponent(jTabbedPane1);
-
-        internalFrame1.add(jSplitPane1, java.awt.BorderLayout.CENTER);
+        internalFrame1.add(TabRawat, java.awt.BorderLayout.CENTER);
 
         panelGlass8.setName("panelGlass8"); // NOI18N
         panelGlass8.setPreferredSize(new java.awt.Dimension(55, 55));
@@ -4117,8 +4103,6 @@ private void MnPeriksaLabActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
     private widget.Label jLabel8;
     private widget.Label jLabel9;
     private javax.swing.JPopupMenu jPopupMenu1;
-    private javax.swing.JSplitPane jSplitPane1;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private widget.TextBox kddokter;
     private widget.TextBox kdpenjab;
     private widget.TextBox kdpoli;
