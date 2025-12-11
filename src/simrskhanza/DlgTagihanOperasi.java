@@ -103,7 +103,8 @@ public class DlgTagihanOperasi extends javax.swing.JDialog {
             }else if(i==3){
                 column.setPreferredWidth(100);
             }else{
-                column.setPreferredWidth(85);
+                column.setMinWidth(0);
+                column.setMaxWidth(0);
             }
         }
         tbtindakan.setDefaultRenderer(Object.class, new WarnaTable());
