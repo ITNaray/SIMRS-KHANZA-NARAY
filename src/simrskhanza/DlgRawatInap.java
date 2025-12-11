@@ -28,8 +28,13 @@ import inventory.DlgCopyResep;
 import inventory.DlgPeresepanDokter;
 import inventory.DlgPermintaanResepPulang;
 import inventory.DlgPermintaanStokPasien;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.Image;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -37,16 +42,28 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import java.awt.Frame;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import javax.swing.JDialog;
+import javax.swing.JSplitPane;
+import javax.swing.JTextArea;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JLabel;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import java.awt.Image;
+import javax.swing.*;
+import java.net.URL;
 import javax.swing.Timer;
 import javax.swing.event.DocumentEvent;
 import javax.swing.table.DefaultTableModel;
@@ -1321,6 +1338,8 @@ public final class DlgRawatInap extends javax.swing.JDialog {
         BtnRujukKeluar = new widget.Button();
         BtnDiagnosa = new widget.Button();
         BtnResume = new widget.Button();
+        BtnHasilRadiologi = new widget.Button();
+        BtnHasilLabor= new widget.Button();
         BtnAwalKeperawatanUmum = new widget.Button();
         BtnAwalKeperawatanKandungan = new widget.Button();
         BtnAwalFisioterapi = new widget.Button();
@@ -2476,7 +2495,7 @@ public final class DlgRawatInap extends javax.swing.JDialog {
         
         // FITUR YANG MEGATUR UNTUK MENAMBAHKAN KOLOM BUTTON FUNGSI BARU
         panelGlass12.add(BtnResume);
-        BtnResume.setBounds(1230, 70, 120,30);
+        BtnResume.setBounds(1230, 70, 170,30);
         BtnResume.setText("Resume Pasien");
         BtnResume.setFocusPainted(false);
         BtnResume.setFont(new java.awt.Font("Tahoma", 0, 11)); 
@@ -2489,6 +2508,42 @@ public final class DlgRawatInap extends javax.swing.JDialog {
         BtnResume.addActionListener(new java.awt.event.ActionListener() {
           public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BtnResumeActionPerformed(evt);
+            }
+        });
+        
+        panelGlass12.add(BtnHasilRadiologi);
+        BtnHasilRadiologi.setBounds(1230, 110, 170,30);
+        BtnHasilRadiologi.setText("Hasil Radiologi");
+        BtnHasilRadiologi.setFocusPainted(false);
+        BtnHasilRadiologi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/cancel.png")));
+        BtnHasilRadiologi.setGlassColor(new java.awt.Color(255,0,0)); // merah muda
+        BtnHasilRadiologi.setFont(new java.awt.Font("Tahoma", 0, 11));
+        BtnHasilRadiologi.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        BtnHasilRadiologi.setMargin(new java.awt.Insets(1, 1, 1, 1));
+        BtnHasilRadiologi.setName("BtnHasilRadiologi"); 
+        BtnHasilRadiologi.setPreferredSize(new java.awt.Dimension(190, 23));
+        BtnHasilRadiologi.setRoundRect(true);
+        BtnHasilRadiologi.addActionListener(new java.awt.event.ActionListener() {
+          public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnHasilRadiologiActionPerformed(evt);
+            }
+        });
+        
+        panelGlass12.add(BtnHasilLabor);
+        BtnHasilLabor.setBounds(1230, 150, 170,30);
+        BtnHasilLabor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/cancel.png")));
+        BtnHasilLabor.setGlassColor(new java.awt.Color(255,0,0)); // merah muda
+        BtnHasilLabor.setText("Hasil Labor");
+        BtnHasilLabor.setFocusPainted(false);
+        BtnHasilLabor.setFont(new java.awt.Font("Tahoma", 0, 11)); 
+        BtnHasilLabor.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        BtnHasilLabor.setMargin(new java.awt.Insets(1, 1, 1, 1));
+        BtnHasilLabor.setName("BtnHasilLabor"); 
+        BtnHasilLabor.setPreferredSize(new java.awt.Dimension(190, 23));
+        BtnHasilLabor.setRoundRect(true);
+        BtnHasilLabor.addActionListener(new java.awt.event.ActionListener() {
+          public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnHasilLaborActionPerformed(evt);
             }
         });
 
@@ -6860,8 +6915,7 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
         });
     }
 }
-
-    
+ 
     private void updateResumeRanapUI() {
     String norawat = TNoRw.getText().trim();
 
@@ -6883,17 +6937,650 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
         BtnResume.setText("Lihat Resume");
         BtnResume.setEnabled(true);
         BtnResume.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/accept.png")));
-        BtnResume.setGlassColor(new java.awt.Color(204,255,204)); 
+        BtnResume.setGlassColor(new java.awt.Color(152,255,0)); 
         BtnResume.setRoundRect(true);
     } else {
         // ✖ Resume BELUM ada
         BtnResume.setText("Buat Resume");
         BtnResume.setEnabled(true);
         BtnResume.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/cancel.png")));
-        BtnResume.setGlassColor(new java.awt.Color(255,230,230)); 
+        BtnResume.setGlassColor(new java.awt.Color(255,0,0)); 
         BtnResume.setRoundRect(true);
     }
 }
+    
+    private void BtnHasilRadiologiActionPerformed(java.awt.event.ActionEvent evt) {
+     String norawat = TNoRw.getText();
+
+        PopupHasilRadiologi popup = new PopupHasilRadiologi(null, norawat);
+        popup.setVisible(true);
+}
+    
+    //fugsi pop up hasil radiolgi
+    public class PopupHasilRadiologi extends JDialog {
+
+        private JTextArea txtHasil = new JTextArea();
+        private JPanel panelGambar = new JPanel();
+
+        private JTable tablePermintaan;
+        private DefaultTableModel tableModel;
+
+        private Connection koneksi = koneksiDB.condb();
+
+       public PopupHasilRadiologi(Frame parent, String norawat) {
+        super(parent, "Hasil Radiologi", true);
+
+        setSize(1200, 900);
+        setLocationRelativeTo(null);
+        setResizable(true);
+        getContentPane().setBackground(Color.WHITE);
+        getContentPane().setLayout(new BorderLayout());
+
+        // PANEL ATAS = LIST PERMINTAAN (FULL PUTIH)
+        String[] kolom = {"Tgl Periksa", "Jam", "Jenis", "Dokter"};
+        tableModel = new DefaultTableModel(kolom, 0);
+        tablePermintaan = new JTable(tableModel);
+        tablePermintaan.setRowHeight(32);
+        tablePermintaan.setBackground(Color.WHITE); 
+        tablePermintaan.setFillsViewportHeight(true); 
+
+        JScrollPane scrollList = new JScrollPane(tablePermintaan);
+        scrollList.getViewport().setBackground(Color.WHITE);
+        // PANEL KIRI = TEKS HASIL
+        txtHasil.setEditable(false);
+        txtHasil.setLineWrap(true);
+        txtHasil.setWrapStyleWord(true);
+        JScrollPane scrollTeks = new JScrollPane(txtHasil);
+        scrollTeks.getViewport().setBackground(Color.WHITE);
+        // PANEL KANAN = GAMBAR
+        panelGambar.setLayout(new BoxLayout(panelGambar, BoxLayout.Y_AXIS));
+        JScrollPane scrollGambar = new JScrollPane(panelGambar);
+        scrollGambar.getViewport().setBackground(Color.WHITE);
+        // SPLIT KIRI-KANAN
+        JSplitPane splitHasil = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollTeks, scrollGambar);
+        splitHasil.setDividerLocation(550);
+        // TAMBAH KE FRAME
+        getContentPane().add(scrollList, BorderLayout.NORTH);
+        getContentPane().add(splitHasil, BorderLayout.CENTER);
+        // LOAD LIST
+        loadListPermintaan(norawat);
+        int tinggi = Math.min(300, Math.max(150, tableModel.getRowCount() * 35));
+        scrollList.setPreferredSize(new Dimension(1200, tinggi));
+
+        if (tableModel.getRowCount() > 0) {
+            tablePermintaan.setRowSelectionInterval(0, 0);
+            // langsung load data untuk baris pertama
+            int row = 0;
+            String tgl = tableModel.getValueAt(row, 0).toString();
+            String jam = tableModel.getValueAt(row, 1).toString();
+            loadData(norawat, tgl, jam);
+        }
+
+        // baru tambahkan listener
+        tablePermintaan.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting() && tablePermintaan.getSelectedRow() != -1) {
+                int row = tablePermintaan.getSelectedRow();
+                String tgl = tableModel.getValueAt(row, 0).toString();
+                String jam = tableModel.getValueAt(row, 1).toString();
+                loadData(norawat, tgl, jam);
+            }
+        });
+
+    }
+
+    private void loadListPermintaan(String norawat) {
+        try {
+            tableModel.setRowCount(0);
+
+            PreparedStatement ps = koneksi.prepareStatement(
+                    "SELECT pr.tgl_periksa, pr.jam, " +
+                    "GROUP_CONCAT(jp.nm_perawatan SEPARATOR ', ') AS jenis_periksa, " +
+                    "pr.kd_dokter " +
+                    "FROM periksa_radiologi pr " +
+                    "INNER JOIN jns_perawatan_radiologi jp ON pr.kd_jenis_prw = jp.kd_jenis_prw " +
+                    "WHERE pr.no_rawat=? " +
+                    "GROUP BY pr.tgl_periksa, pr.jam " +
+                    "ORDER BY pr.tgl_periksa, pr.jam"
+                );
+                ps.setString(1, norawat);
+
+                ResultSet rs = ps.executeQuery();
+
+                while (rs.next()) {
+                    tableModel.addRow(new Object[]{
+                        rs.getString("tgl_periksa"),
+                        rs.getString("jam"),
+                        rs.getString("jenis_periksa"), // gabungan nama perawatan
+                        rs.getString("kd_dokter")
+                    });
+                }
+
+
+
+            if (tableModel.getRowCount() > 0) {
+                tablePermintaan.setRowSelectionInterval(0, 0);
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Gagal load daftar permintaan");
+        }
+    }
+
+    private void loadData(String norawat, String tgl, String jam) {
+
+        // === HASIL TEKS ===
+        try {
+            PreparedStatement ps1 = koneksi.prepareStatement(
+                    "SELECT hasil FROM hasil_radiologi WHERE no_rawat=? AND tgl_periksa=? AND jam=?"
+            );
+            ps1.setString(1, norawat);
+            ps1.setString(2, tgl);
+            ps1.setString(3, jam);
+
+            ResultSet rs1 = ps1.executeQuery();
+
+            if (rs1.next()) {
+                txtHasil.setText(rs1.getString("hasil"));
+            } else {
+                txtHasil.setText("Tidak ada hasil.");
+            }
+
+        } catch (Exception ex) {
+            txtHasil.setText("Gagal memuat hasil.");
+        }
+
+        // === GAMBAR ===
+        try {
+            PreparedStatement ps2 = koneksi.prepareStatement(
+                    "SELECT lokasi_gambar FROM gambar_radiologi " +
+                    "WHERE no_rawat=? AND tgl_periksa=? AND jam=?"
+            );
+            ps2.setString(1, norawat);
+            ps2.setString(2, tgl);
+            ps2.setString(3, jam);
+
+            ResultSet rs2 = ps2.executeQuery();
+
+            panelGambar.removeAll();
+
+            boolean ada = false;
+
+            while (rs2.next()) {
+                ada = true;
+                String img = rs2.getString("lokasi_gambar");
+
+                String urlGambar = "http://" +
+                        koneksiDB.HOSTHYBRIDWEB() + ":" +
+                        koneksiDB.PORTWEB() + "/" +
+                        koneksiDB.HYBRIDWEB() + "/radiologi/" +
+                        img;
+
+                try {
+                    URL url = new URL(urlGambar);
+                    ImageIcon icon = new ImageIcon(url);
+
+                    Image scaled = icon.getImage().getScaledInstance(700, 700, Image.SCALE_SMOOTH);
+                    JLabel lbl = new JLabel(new ImageIcon(scaled));
+                    lbl.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+                    panelGambar.add(lbl);
+                    panelGambar.add(Box.createVerticalStrut(20));
+
+                } catch (Exception ex) {
+                    JLabel err = new JLabel("Gagal load: " + img);
+                    err.setForeground(java.awt.Color.RED);
+                    panelGambar.add(err);
+                }
+            }
+
+            if (!ada) {
+                JLabel info = new JLabel("Tidak ada gambar.");
+                info.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT);
+                panelGambar.add(info);
+            }
+
+            panelGambar.revalidate();
+            panelGambar.repaint();
+
+        } catch (Exception e) {
+            JLabel errorAll = new JLabel("Gagal load gambar.");
+            errorAll.setForeground(java.awt.Color.RED);
+            panelGambar.add(errorAll);
+        }
+    }
+}
+
+
+private void cekStatusRadiologi() {
+    String norawat = TNoRw.getText();
+
+    try {
+        boolean adaPermintaan = false;
+        boolean adaHasil = false;
+
+        // CEK PERMINTAAN
+        PreparedStatement ps1 = koneksi.prepareStatement(
+            "SELECT noorder FROM permintaan_radiologi WHERE no_rawat=?"
+        );
+        ps1.setString(1, norawat);
+        ResultSet rs1 = ps1.executeQuery();
+        if (rs1.next()) {
+            adaPermintaan = true;
+        }
+
+        // CEK HASIL TEKS
+        PreparedStatement ps2 = koneksi.prepareStatement(
+            "SELECT no_rawat FROM hasil_radiologi WHERE no_rawat=?"
+        );
+        ps2.setString(1, norawat);
+        ResultSet rs2 = ps2.executeQuery();
+        if (rs2.next()) {
+            adaHasil = true;
+        }
+
+        // CEK HASIL GAMBAR
+        PreparedStatement ps3 = koneksi.prepareStatement(
+            "SELECT no_rawat FROM gambar_radiologi WHERE no_rawat=?"
+        );
+        ps3.setString(1, norawat);
+        ResultSet rs3 = ps3.executeQuery();
+        if (rs3.next()) {
+            adaHasil = true;
+        }
+
+        if (!adaPermintaan) {
+            // TIDAK ADA PERMINTAAN
+            BtnHasilRadiologi.setGlassColor(new java.awt.Color(255,0,0)); // merah
+            BtnHasilRadiologi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/cancel.png")));
+            BtnHasilRadiologi.setText("Radiologi (Tidak Ada)");
+        }
+        else if (adaPermintaan && !adaHasil) {
+            // ADA PERMINTAAN - BELUM ADA HASIL
+            BtnHasilRadiologi.setGlassColor(new java.awt.Color(255,165,0)); // oranye
+            BtnHasilRadiologi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/warning.png")));
+            BtnHasilRadiologi.setText("Menunggu Hasil Radiologi");
+        }
+        else if (adaHasil) {
+            // ADA HASIL TEKS / GAMBAR
+            BtnHasilRadiologi.setGlassColor(new java.awt.Color(0,153,0)); // hijau
+            BtnHasilRadiologi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/accept.png")));
+            BtnHasilRadiologi.setText("Hasil Radiologi Ada");
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+
+    
+    private void BtnHasilLaborActionPerformed(java.awt.event.ActionEvent evt) {
+    String norawat = TNoRw.getText();
+    if (norawat.isEmpty()) {
+        JOptionPane.showMessageDialog(null, "No. Rawat belum dipilih!");
+        return;
+    }
+
+    new PopupHasilLabor(null, norawat).setVisible(true);
+}
+
+
+
+public class PopupHasilLabor extends JDialog {
+
+    private JTable tablePermintaan;
+    private DefaultTableModel tableModel;
+    private Connection koneksi = koneksiDB.condb();
+
+    private JEditorPane htmlViewer;
+
+    public PopupHasilLabor(Frame parent, String norawat) {
+        super(parent, "Hasil Laboratorium", true);
+
+        setSize(1200, 750);
+        setLocationRelativeTo(null);
+        setLayout(new BorderLayout());
+
+        // ================== TABEL LIST PERMINTAAN ====================
+        String[] kolom = {"Tgl", "Jam", "Jenis Periksa"};
+        tableModel = new DefaultTableModel(kolom, 0);
+
+        tablePermintaan = new JTable(tableModel);
+        tablePermintaan.setRowHeight(28);
+        tablePermintaan.setBackground(Color.WHITE);
+        JScrollPane leftList = new JScrollPane(tablePermintaan);
+        leftList.setBorder(BorderFactory.createTitledBorder("Daftar Pemeriksaan"));
+
+        // ================== HTML VIEWER HASIL ========================
+        htmlViewer = new JEditorPane();
+        htmlViewer.setEditable(false);
+        htmlViewer.setContentType("text/html");
+
+        JScrollPane rightViewer = new JScrollPane(htmlViewer);
+        rightViewer.setBorder(BorderFactory.createTitledBorder("Hasil Pemeriksaan"));
+
+        // ================== SPLIT PANEL (30 / 70) ====================
+        JSplitPane split = new JSplitPane(
+                JSplitPane.HORIZONTAL_SPLIT,
+                leftList,
+                rightViewer
+        );
+        split.setDividerLocation(0.30);     // 30% kiri
+        split.setResizeWeight(0.30);        // kiri fix 30%
+
+        add(split, BorderLayout.CENTER);
+
+        // ================== LOAD DATA LIST ===========================
+        loadListPermintaan(norawat);
+
+        // otomatis pilih baris pertama
+        if (tableModel.getRowCount() > 0) {
+            tablePermintaan.setRowSelectionInterval(0, 0);
+
+            String tgl = tableModel.getValueAt(0, 0).toString();
+            String jam = tableModel.getValueAt(0, 1).toString();
+            loadHTMLLab(norawat, tgl, jam);
+        }
+
+        // klik baris → tampilkan hasil
+        tablePermintaan.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting() && tablePermintaan.getSelectedRow() != -1) {
+                int row = tablePermintaan.getSelectedRow();
+                String tgl = tableModel.getValueAt(row, 0).toString();
+                String jam = tableModel.getValueAt(row, 1).toString();
+                loadHTMLLab(norawat, tgl, jam);
+            }
+        });
+    }
+
+
+    // ================== LOAD LIST PERMINTAAN ===========================
+    private void loadListPermintaan(String norawat) {
+        try {
+            tableModel.setRowCount(0);
+
+            PreparedStatement ps = koneksi.prepareStatement(
+                "SELECT pl.tgl_periksa, pl.jam, " +
+                "GROUP_CONCAT(jl.nm_perawatan SEPARATOR ', ') AS jenis " +
+                "FROM periksa_lab pl " +
+                "INNER JOIN jns_perawatan_lab jl ON pl.kd_jenis_prw=jl.kd_jenis_prw " +
+                "WHERE pl.no_rawat=? " +
+                "GROUP BY pl.tgl_periksa, pl.jam " +
+                "ORDER BY pl.tgl_periksa, pl.jam"
+            );
+            ps.setString(1, norawat);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                tableModel.addRow(new Object[]{
+                        rs.getString("tgl_periksa"),
+                        rs.getString("jam"),
+                        rs.getString("jenis")
+                });
+            }
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Gagal memuat daftar pemeriksaan:\n" + ex.getMessage());
+        }
+    }
+
+
+    // ================== LOAD HTML HASIL ===========================
+private void loadHTMLLab(String norawat, String tgl, String jam) {
+    try {
+
+        StringBuilder html = new StringBuilder();
+
+        // ====================== CSS DOMINAN HIJAU ==========================
+        html.append("<html><head><style>");
+
+        html.append("body{font-family:Arial;margin:20px;font-size:13px;background:#F1F8F6;}");
+
+        // Title hijau elegan
+        html.append(".title{font-size:22px;font-weight:bold;color:#2E7D32;");
+        html.append("margin-bottom:15px;border-left:6px solid #66BB6A;");
+        html.append("padding-left:10px;}");
+
+        // Box identitas pasien
+        html.append(".header-box{background:white;padding:14px;border-radius:8px;");
+        html.append("margin-bottom:20px;border:1px solid #C8E6C9;");
+        html.append("box-shadow:0 1px 3px rgba(0,0,0,0.06);}"); 
+
+        html.append(".label{font-weight:bold;width:130px;display:inline-block;color:#1B5E20;}");
+
+        // Jenis pemeriksaan (hijau lembut)
+        html.append(".jenis{background:#E8F5E9;padding:10px;margin-top:18px;");
+        html.append("border-left:5px solid #2E7D32;font-weight:bold;font-size:14px;");
+        html.append("border-radius:4px;color:#1B5E20;}");
+
+        // Tabel hasil
+        html.append("table{width:100%;border-collapse:collapse;margin-top:8px;background:white;");
+        html.append("box-shadow:0 1px 3px rgba(0,0,0,0.04);}"); 
+
+        html.append("th{background:#2E7D32;color:white;border:1px solid #A5D6A7;");
+        html.append("padding:8px;text-align:left;font-size:13px;}");
+
+        html.append("td{border:1px solid #C8E6C9;padding:7px;font-size:13px;}");
+
+        // Baris bergantian
+        html.append("tr:nth-child(even){background:#F9FFF9;}");
+
+        // Abnormal ↑ ↓
+        html.append(".high{color:#C62828;font-weight:bold;background:#FFEBEE;}"); // merah lembut
+        html.append(".low{color:#6D4C41;font-weight:bold;background:#EFEBE9;}");  // coklat lembut
+
+        html.append("</style></head><body>");
+
+        // ==================== HEADER PASIEN ==========================
+        PreparedStatement ps = koneksi.prepareStatement(
+            "SELECT rp.no_rkm_medis, p.nm_pasien, p.jk, p.umur, d.nm_dokter, " +
+            "DATE_FORMAT(pl.tgl_periksa,'%d-%m-%Y') AS tanggal, " +
+            "CONCAT(p.alamat, ', ', kel.nm_kel, ', ', kec.nm_kec, ', ', kab.nm_kab) AS alamat " +
+            "FROM periksa_lab pl " +
+            "INNER JOIN reg_periksa rp ON rp.no_rawat=pl.no_rawat " +
+            "INNER JOIN pasien p ON p.no_rkm_medis=rp.no_rkm_medis " +
+            "INNER JOIN dokter d ON d.kd_dokter=pl.kd_dokter " +
+            "INNER JOIN kelurahan kel ON kel.kd_kel=p.kd_kel " +
+            "INNER JOIN kecamatan kec ON kec.kd_kec=p.kd_kec " +
+            "INNER JOIN kabupaten kab ON kab.kd_kab=p.kd_kab " +
+            "WHERE pl.no_rawat=? AND pl.tgl_periksa=? AND pl.jam=? LIMIT 1"
+        );
+        ps.setString(1, norawat);
+        ps.setString(2, tgl);
+        ps.setString(3, jam);
+
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+
+            html.append("<div class='title'>Hasil Pemeriksaan Laboratorium</div>");
+
+            html.append("<div class='header-box'>");
+
+            html.append("<span class='label'>Nama :</span>")
+                .append(rs.getString("nm_pasien")).append("<br>");
+
+            html.append("<span class='label'>No RM :</span>")
+                .append(rs.getString("no_rkm_medis")).append("<br>");
+
+            html.append("<span class='label'>JK / Umur :</span>")
+                .append(rs.getString("jk")).append(" / ")
+                .append(rs.getString("umur")).append("<br>");
+
+            html.append("<span class='label'>Dokter :</span>")
+                .append(rs.getString("nm_dokter")).append("<br>");
+
+            html.append("<span class='label'>Alamat :</span>")
+                .append(rs.getString("alamat")).append("<br>");
+
+            html.append("<span class='label'>Waktu :</span>")
+                .append(rs.getString("tanggal")).append(" • ")
+                .append(jam).append("<br>");
+
+            html.append("</div>");
+        }
+
+        // ==================== JENIS / DETAIL ==========================
+        PreparedStatement psJenis = koneksi.prepareStatement(
+            "SELECT DISTINCT jl.kd_jenis_prw, jl.nm_perawatan " +
+            "FROM periksa_lab pl " +
+            "INNER JOIN jns_perawatan_lab jl ON pl.kd_jenis_prw=jl.kd_jenis_prw " +
+            "WHERE pl.no_rawat=? AND pl.tgl_periksa=? AND pl.jam=?"
+        );
+        psJenis.setString(1, norawat);
+        psJenis.setString(2, tgl);
+        psJenis.setString(3, jam);
+
+        ResultSet rsJenis = psJenis.executeQuery();
+
+        while (rsJenis.next()) {
+
+            html.append("<div class='jenis'>")
+                .append(rsJenis.getString("nm_perawatan"))
+                .append("</div>");
+
+            html.append("<table>");
+            html.append("<tr>");
+            html.append("<th>Pemeriksaan</th>");
+            html.append("<th>Hasil</th>");
+            html.append("<th>Satuan</th>");
+            html.append("<th>Nilai Rujukan</th>");
+            html.append("<th>Keterangan</th>");
+            html.append("</tr>");
+
+            PreparedStatement psDet = koneksi.prepareStatement(
+                "SELECT tl.Pemeriksaan, dpl.nilai, tl.satuan, dpl.nilai_rujukan, dpl.keterangan " +
+                "FROM detail_periksa_lab dpl " +
+                "INNER JOIN template_laboratorium tl ON dpl.id_template=tl.id_template " +
+                "WHERE dpl.no_rawat=? AND dpl.kd_jenis_prw=? AND dpl.tgl_periksa=? AND dpl.jam=? " +
+                "ORDER BY tl.urut"
+            );
+            psDet.setString(1, norawat);
+            psDet.setString(2, rsJenis.getString("kd_jenis_prw"));
+            psDet.setString(3, tgl);
+            psDet.setString(4, jam);
+
+            ResultSet rsDet = psDet.executeQuery();
+
+            while (rsDet.next()) {
+
+                String nilai = rsDet.getString("nilai");
+                String rujuk = rsDet.getString("nilai_rujukan");
+
+                String css = "";
+                String nilaiTampil = nilai;
+
+                // ==================== DETEKSI ABNORMAL ====================
+                try {
+                    if (rujuk.contains("-")) {
+                        String[] rr = rujuk.split("-");
+                        double low  = Double.parseDouble(rr[0].trim());
+                        double high = Double.parseDouble(rr[1].trim());
+                        double val  = Double.parseDouble(nilai.trim());
+
+                        if (val < low) {
+                            css = "low";
+                            nilaiTampil = nilai + " ↓";
+                        } else if (val > high) {
+                            css = "high";
+                            nilaiTampil = nilai + " ↑";
+                        }
+                    }
+                } catch (Exception ignore) {}
+
+                html.append("<tr>");
+                html.append("<td>").append(rsDet.getString("Pemeriksaan")).append("</td>");
+                html.append("<td class='").append(css).append("'>")
+                    .append(nilaiTampil).append("</td>");
+                html.append("<td>").append(rsDet.getString("satuan")).append("</td>");
+                html.append("<td>").append(rujuk).append("</td>");
+                html.append("<td>").append(rsDet.getString("keterangan")).append("</td>");
+                html.append("</tr>");
+            }
+
+            html.append("</table>");
+        }
+
+        html.append("</body></html>");
+
+        htmlViewer.setText(html.toString());
+        htmlViewer.setCaretPosition(0);
+
+    } catch (Exception e) {
+        htmlViewer.setText(
+            "<html><body>Gagal memuat hasil.<br>" + e.getMessage() + "</body></html>"
+        );
+    }
+}
+
+}
+
+private void cekStatusLabor() {
+    String norawat = TNoRw.getText();
+
+    try {
+        boolean adaPermintaan = false;
+        boolean adaHasil = false;
+
+        // ===================== CEK PERMINTAAN LAB ======================
+        PreparedStatement ps1 = koneksi.prepareStatement(
+            "SELECT noorder FROM permintaan_lab WHERE no_rawat=? LIMIT 1"
+        );
+        ps1.setString(1, norawat);
+        ResultSet rs1 = ps1.executeQuery();
+
+        if (rs1.next()) {
+            adaPermintaan = true;
+        }
+
+        // ===================== CEK HASIL LAB (periksa_lab) ======================
+        PreparedStatement ps2 = koneksi.prepareStatement(
+            "SELECT no_rawat FROM periksa_lab WHERE no_rawat=? LIMIT 1"
+        );
+        ps2.setString(1, norawat);
+        ResultSet rs2 = ps2.executeQuery();
+
+        if (rs2.next()) {
+            adaHasil = true;
+        }
+
+        // ===================== CEK HASIL DETAIL LAB ======================
+        PreparedStatement ps3 = koneksi.prepareStatement(
+            "SELECT no_rawat FROM detail_periksa_lab WHERE no_rawat=? LIMIT 1"
+        );
+        ps3.setString(1, norawat);
+        ResultSet rs3 = ps3.executeQuery();
+
+        if (rs3.next()) {
+            adaHasil = true;
+        }
+
+        // ===================== SET WARNA TOMBOL ======================
+
+        if (!adaPermintaan) {
+            // TIDAK ADA PERMINTAAN
+            BtnHasilLabor.setGlassColor(new java.awt.Color(255,0,0)); // merah
+            BtnHasilLabor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/cancel.png")));
+            BtnHasilLabor.setText("Labor (Tidak Ada)");
+        }
+        else if (adaPermintaan && !adaHasil) {
+            // ADA PERMINTAAN, BELUM ADA HASIL
+            BtnHasilLabor.setGlassColor(new java.awt.Color(255,165,0)); // oranye
+            BtnHasilLabor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/warning.png")));
+            BtnHasilLabor.setText("Menunggu Hasil Laboratorium");
+        }
+        else if (adaHasil) {
+            // HASIL SUDAH ADA
+            BtnHasilLabor.setGlassColor(new java.awt.Color(0,153,0)); // hijau
+            BtnHasilLabor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/accept.png")));
+            BtnHasilLabor.setText("Hasil Laboratorium Ada");
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+
 
     
 
@@ -8818,6 +9505,8 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
     private widget.Button BtnRekonsiliasiObat;
     private widget.Button BtnResepObat;
     private widget.Button BtnResume;
+    private widget.Button BtnHasilRadiologi;
+    private widget.Button BtnHasilLabor;
     private widget.Button BtnRiwayat;
     private widget.Button BtnRujukKeluar;
     private widget.Button BtnSKDP;
@@ -9410,7 +10099,9 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
         TabRawatMouseClicked(null);
         //untuk tampilan resume 
         updateResumeRanapUI();
-
+        cekStatusRadiologi();
+        cekStatusLabor();
+       
     }
     
     public void setKamar(String kamar) {
