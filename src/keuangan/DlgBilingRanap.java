@@ -3547,67 +3547,137 @@ private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
 }//GEN-LAST:event_BtnCariKeyPressed
 
     private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnSimpanActionPerformed
+         try {
+        pscekbilling = koneksi.prepareStatement(sqlpscekbilling);
         try {
-            pscekbilling=koneksi.prepareStatement(sqlpscekbilling);
-            try {
-                pscekbilling.setString(1,TNoRw.getText());
-                rscekbilling=pscekbilling.executeQuery();
-                if(rscekbilling.next()){
-                    i=rscekbilling.getInt(1);
-                }
-            } catch (Exception e) {
-                System.out.println("Notifikasi : "+e);
-            } finally{
-                if(rscekbilling!=null){
-                    rscekbilling.close();
-                }
-                if(pscekbilling!=null){
-                    pscekbilling.close();
-                }
+            pscekbilling.setString(1, TNoRw.getText());
+            rscekbilling = pscekbilling.executeQuery();
+            if (rscekbilling.next()) {
+                i = rscekbilling.getInt(1);
             }
         } catch (Exception e) {
-            System.out.println(e);
-        }         
-        
-        if(TNoRw.getText().trim().equals("")||TNoRM.getText().trim().equals("")||TPasien.getText().trim().equals("")){
-            Valid.textKosong(TNoRw,"Pasien");
-        }else if(i>0){
-            JOptionPane.showMessageDialog(null,"Maaf, data tagihan pasien dengan No.Rawat tersebut sudah pernah disimpan...!!!");
-        }else if(i==0){ 
-            if(piutang<=0){
-                if(kekurangan<0){
-                    JOptionPane.showMessageDialog(null,"Maaf, pembayaran pasien masih kurang ...!!!");
-                }else if(kekurangan>0){
-                    if(countbayar>1){
-                        JOptionPane.showMessageDialog(null,"Maaf, kembali harus bernilai 0 untuk cara bayar lebih dari 1...!!!");
-                    }else{
-                        if(ChkPiutang.isSelected()==true){
-                            JOptionPane.showMessageDialog(null,"Maaf, matikan centang di piutang ...!!!");
-                        }else{
-                            isSimpan();
-                        }                            
-                    }                        
-                }else if(kekurangan==0){
-                    if(ChkPiutang.isSelected()==true){
-                        JOptionPane.showMessageDialog(null,"Maaf, matikan centang di piutang ...!!!");
-                    }else{
-                        isSimpan();
-                    } 
-                }                
-            }else if(piutang>=1){
-                if(ChkPiutang.isSelected()==true){
-                    if(kekurangan<0){
-                        JOptionPane.showMessageDialog(null,"Maaf, piutang belum genap. Silahkan isi di jumlah piutang ...!!!");
-                    }else if(kekurangan>0){
-                        JOptionPane.showMessageDialog(null,"Maaf, terjadi kelebihan piutang ...!!!");
-                    }else{
-                        isSimpan();
-                    }    
-                }else if(ChkPiutang.isSelected()==false){
-                    JOptionPane.showMessageDialog(rootPane,"Silahkan centang terlebih dahulu pada pilihan piutang...!!");
-                }                
+            System.out.println("Notifikasi : " + e);
+        } finally {
+            if (rscekbilling != null) {
+                rscekbilling.close();
             }
-        }           
+            if (pscekbilling != null) {
+                pscekbilling.close();
+            }
+        }
+    } catch (Exception e) {
+        System.out.println(e);
+    }
+
+    // ===================== CEK DATA KOSONG =======================
+    if (TNoRw.getText().trim().equals("") ||
+        TNoRM.getText().trim().equals("") ||
+        TPasien.getText().trim().equals("")) {
+
+        Valid.textKosong(TNoRw, "Pasien");
+        return;
+    }
+
+    // ===================== CEK PASIEN SUDAH PULANG (RAWAT INAP) =======================
+    try {
+        PreparedStatement psPulang = koneksi.prepareStatement(
+            "SELECT tgl_keluar, jam_keluar FROM kamar_inap " +
+            "WHERE no_rawat=? ORDER BY tgl_masuk DESC, jam_masuk DESC LIMIT 1"
+        );
+        psPulang.setString(1, TNoRw.getText());
+        ResultSet rsPulang = psPulang.executeQuery();
+
+        if (rsPulang.next()) {
+            String tglKeluar = rsPulang.getString("tgl_keluar");
+            String jamKeluar = rsPulang.getString("jam_keluar");
+
+            boolean belumPulang =
+                    tglKeluar == null || tglKeluar.equals("") || tglKeluar.equals("0000-00-00") ||
+                    jamKeluar == null || jamKeluar.equals("") || jamKeluar.equals("00:00:00");
+
+            if (belumPulang) {
+                JOptionPane.showMessageDialog(
+                    null,
+                    "Pasien belum dipulangkan dari ruang rawat inap.\n" +
+                    "Silahkan lakukan proses pulang dahulu sebelum menutup billing!",
+                    "Billing Tidak Bisa Ditutup",
+                    JOptionPane.WARNING_MESSAGE
+                );
+                rsPulang.close();
+                psPulang.close();
+                return; // ===== STOP PROSES =====
+            }
+        }
+
+        rsPulang.close();
+        psPulang.close();
+
+    } catch (Exception e) {
+        System.out.println("Error cek pulang : " + e);
+    }
+
+    // ===================== CEK BILLING SUDAH ADA =======================
+    if (i > 0) {
+        JOptionPane.showMessageDialog(
+            null,
+            "Maaf, data tagihan pasien dengan No.Rawat tersebut sudah pernah disimpan...!!!"
+        );
+    } 
+    else if (i == 0) {
+
+        // ===================== LOGIKA PEMBAYARAN =======================
+        if (piutang <= 0) {
+
+            if (kekurangan < 0) {
+                JOptionPane.showMessageDialog(null, "Maaf, pembayaran pasien masih kurang ...!!!");
+
+            } else if (kekurangan > 0) {
+
+                if (countbayar > 1) {
+                    JOptionPane.showMessageDialog(null,
+                        "Maaf, kembali harus bernilai 0 untuk cara bayar lebih dari 1...!!!");
+                } else {
+
+                    if (ChkPiutang.isSelected()) {
+                        JOptionPane.showMessageDialog(null,
+                            "Maaf, matikan centang di piutang ...!!!");
+                    } else {
+                        isSimpan();
+                    }
+                }
+
+            } else if (kekurangan == 0) {
+
+                if (ChkPiutang.isSelected()) {
+                    JOptionPane.showMessageDialog(null,
+                        "Maaf, matikan centang di piutang ...!!!");
+                } else {
+                    isSimpan();
+                }
+            }
+
+        } else if (piutang >= 1) {
+
+            if (ChkPiutang.isSelected()) {
+
+                if (kekurangan < 0) {
+                    JOptionPane.showMessageDialog(null,
+                        "Maaf, piutang belum genap. Silahkan isi di jumlah piutang ...!!!");
+
+                } else if (kekurangan > 0) {
+                    JOptionPane.showMessageDialog(null,
+                        "Maaf, terjadi kelebihan piutang ...!!!");
+
+                } else {
+                    isSimpan();
+                }
+
+            } else {
+                JOptionPane.showMessageDialog(rootPane,
+                    "Silahkan centang terlebih dahulu pada pilihan piutang...!!");
+            }
+        }
+    }
     }//GEN-LAST:event_BtnSimpanActionPerformed
 
     private void BtnSimpanUbahLamaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnSimpanUbahLamaActionPerformed
