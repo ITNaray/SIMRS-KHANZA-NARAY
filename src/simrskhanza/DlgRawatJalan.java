@@ -7834,7 +7834,7 @@ private void BtnResumeActionPerformed(java.awt.event.ActionEvent evt) {
        public PopupHasilRadiologi(Frame parent, String norawat) {
         super(parent, "Hasil Radiologi", true);
 
-        setSize(1200, 900);
+        setSize(1800, 950);
         setLocationRelativeTo(null);
         setResizable(true);
         getContentPane().setBackground(Color.WHITE);
@@ -8101,7 +8101,7 @@ public class PopupHasilLabor extends JDialog {
     public PopupHasilLabor(Frame parent, String norawat) {
         super(parent, "Hasil Laboratorium", true);
 
-        setSize(1200, 750);
+        setSize(1800, 900);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
