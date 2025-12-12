@@ -6937,7 +6937,7 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
         BtnResume.setText("Lihat Resume");
         BtnResume.setEnabled(true);
         BtnResume.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/accept.png")));
-        BtnResume.setGlassColor(new java.awt.Color(152,255,0)); 
+        BtnResume.setGlassColor(new java.awt.Color(0,153,0)); 
         BtnResume.setRoundRect(true);
     } else {
         // ✖ Resume BELUM ada

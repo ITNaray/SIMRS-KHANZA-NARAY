@@ -216,7 +216,7 @@ public class DlgKamarInap extends javax.swing.JDialog {
         tabMode=new DefaultTableModel(null,new Object[]{
             "No.Rawat","Nomer RM","Nama Pasien","Alamat Pasien","Penanggung Jawab","Hubungan P.J.","Jenis Bayar","Kamar","Tarif Kamar",
             "Diagnosa Awal","Diagnosa Akhir","Tgl.Masuk","Jam Masuk","Tgl.Keluar","Jam Keluar",
-            "Ttl.Biaya","Stts.Pulang","Lama Inap","Dokter Pemeriksa","DPJP","Kamar","Status Bayar","Agama"
+            "Ttl.Biaya","Stts.Pulang","Lama Inap","Dokter Pemeriksa","DPJP","Kamar","Status Bayar","Agama","Asal Poli"
             }){
               @Override public boolean isCellEditable(int rowIndex, int colIndex){return false;}
         };
@@ -227,7 +227,7 @@ public class DlgKamarInap extends javax.swing.JDialog {
         tbKamIn.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
 
-        for (i = 0; i < 23; i++) {
+        for (i = 0; i < 24; i++) {
             TableColumn column = tbKamIn.getColumnModel().getColumn(i);
 
             // kolom yang disembunyikan
@@ -18179,7 +18179,8 @@ public class DlgKamarInap extends javax.swing.JDialog {
                 + "kamar_inap.stts_pulang like '%" + cari + "%' or "
                 + "kamar_inap.tgl_keluar like '%" + cari + "%' or "
                 + "penjab.png_jawab like '%" + cari + "%' or "
-                + "pasien.agama like '%" + cari + "%'"
+                + "pasien.agama like '%" + cari + "%' or "
+                + "poliklinik.nm_poli like '%" + cari + "%'"
                 + ") " + terbitsep;
         }
         
@@ -18202,8 +18203,11 @@ public class DlgKamarInap extends javax.swing.JDialog {
                 "FROM dpjp_ranap dp " +
                 "INNER JOIN dokter d2 ON d2.kd_dokter = dp.kd_dokter " +
                 "WHERE dp.no_rawat = kamar_inap.no_rawat), '') AS dpjp_ranap, " +
-
-                "kamar_inap.kd_kamar,reg_periksa.kd_pj,pasien.umur,reg_periksa.status_bayar,pasien.agama " +
+                       
+                "kamar_inap.kd_kamar,reg_periksa.kd_pj,pasien.umur,reg_periksa.status_bayar,pasien.agama, " +
+                 
+                "poliklinik.nm_poli " +
+                        
                 "from kamar_inap inner join reg_periksa on kamar_inap.no_rawat=reg_periksa.no_rawat " +
                 "inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis " +
                 "inner join kamar on kamar_inap.kd_kamar=kamar.kd_kamar " +
@@ -18213,6 +18217,7 @@ public class DlgKamarInap extends javax.swing.JDialog {
                 "inner join kabupaten on pasien.kd_kab=kabupaten.kd_kab " +
                 "inner join dokter on reg_periksa.kd_dokter=dokter.kd_dokter " +
                 "inner join penjab on reg_periksa.kd_pj=penjab.kd_pj " +
+                "inner join poliklinik on reg_periksa.kd_poli=poliklinik.kd_poli " + // 🔥 JOIN KE TABEL POLIKLINIK
                 (namadokter.equals("")
                     ? "where " + key + " " + order
                     : // kalau filter per DPJP dokter:
@@ -18229,7 +18234,8 @@ public class DlgKamarInap extends javax.swing.JDialog {
                         rs.getString("kamar"),Valid.SetAngka(rs.getDouble("trf_kamar")),rs.getString("diagnosa_awal"),
                         rs.getString("diagnosa_akhir"),rs.getString("tgl_masuk"),rs.getString("jam_masuk"),rs.getString("tgl_keluar"),
                         rs.getString("jam_keluar"),Valid.SetAngka(rs.getDouble("ttl_biaya")),rs.getString("stts_pulang"),
-                        rs.getString("lama"),rs.getString("nm_dokter"),rs.getString("dpjp_ranap"),rs.getString("kd_kamar"),rs.getString("status_bayar"),rs.getString("agama")
+                        rs.getString("lama"),rs.getString("nm_dokter"),rs.getString("dpjp_ranap"),rs.getString("kd_kamar"),rs.getString("status_bayar"),rs.getString("agama"),
+                        rs.getString("nm_poli")    
                     });
                     psanak=koneksi.prepareStatement(
                         "select pasien.no_rkm_medis,pasien.nm_pasien,ranap_gabung.no_rawat2,pasien.umur,pasien.no_peserta, "+

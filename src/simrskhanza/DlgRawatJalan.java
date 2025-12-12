@@ -7801,7 +7801,7 @@ private void BtnResumeActionPerformed(java.awt.event.ActionEvent evt) {
             BtnResume.setText("Lihat Resume");
             BtnResume.setEnabled(true);
             BtnResume.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/accept.png")));
-            BtnResume.setGlassColor(new java.awt.Color(152,255,0)); // hijau muda
+            BtnResume.setGlassColor(new java.awt.Color(0,153,0)); // hijau muda
             BtnResume.setRoundRect(true);
         } else {
             // ✖ Resume BELUM ada
