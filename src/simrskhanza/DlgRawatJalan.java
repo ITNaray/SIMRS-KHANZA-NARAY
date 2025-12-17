@@ -2507,7 +2507,7 @@ public final class DlgRawatJalan extends javax.swing.JDialog {
     
     // FITUR YANG MEGATUR UNTUK MENAMBAHKAN KOLOM BUTTON FUNGSI BARU
     panelGlass12.add(BtnResume);
-    BtnResume.setBounds(1200, 70, 170,30);
+    BtnResume.setBounds(1200, 70, 200,30);
     BtnResume.setText("Resume Pasien");
     BtnResume.setFocusPainted(false);
     BtnResume.setFont(new java.awt.Font("Tahoma", 0, 11)); 
@@ -2524,7 +2524,7 @@ public final class DlgRawatJalan extends javax.swing.JDialog {
     });
     
     panelGlass12.add(BtnHasilRadiologi);
-        BtnHasilRadiologi.setBounds(1200, 110, 170,30);
+        BtnHasilRadiologi.setBounds(1200, 110, 200,30);
         BtnHasilRadiologi.setText("Hasil Radiologi");
         BtnHasilRadiologi.setFocusPainted(false);
         BtnHasilRadiologi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/cancel.png")));
@@ -2542,7 +2542,7 @@ public final class DlgRawatJalan extends javax.swing.JDialog {
         });
         
     panelGlass12.add(BtnHasilLabor);
-        BtnHasilLabor.setBounds(1200, 150, 170,30);
+        BtnHasilLabor.setBounds(1200, 150, 200,30);
         BtnHasilLabor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/cancel.png")));
         BtnHasilLabor.setGlassColor(new java.awt.Color(255,0,0)); // merah muda
         BtnHasilLabor.setText("Hasil Labor");
@@ -2560,7 +2560,7 @@ public final class DlgRawatJalan extends javax.swing.JDialog {
         });
         
     panelGlass12.add(BtnLaporanOp);
-        BtnLaporanOp.setBounds(1200, 190, 170,30);
+        BtnLaporanOp.setBounds(1200, 190, 200,30);
         BtnLaporanOp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/cancel.png")));
         BtnLaporanOp.setGlassColor(new java.awt.Color(255,0,0)); // merah muda
         BtnLaporanOp.setText("Laporan Operasi");
@@ -7814,7 +7814,7 @@ private void BtnResumeActionPerformed(java.awt.event.ActionEvent evt) {
     try {
         // Cek dulu apakah tabel/kolomnya benar via try
         PreparedStatement psRad = koneksi.prepareStatement(
-            "select hasil from periksa_radiologi where no_rawat=?");
+            "select hasil from hasil_radiologi where no_rawat=?");
             try {
                 psRad.setString(1, noRawat);
                 ResultSet rsRad = psRad.executeQuery();
@@ -8163,7 +8163,7 @@ private void cekStatusRadiologi() {
             // TIDAK ADA PERMINTAAN
             BtnHasilRadiologi.setGlassColor(new java.awt.Color(255,0,0)); // merah
             BtnHasilRadiologi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/cancel.png")));
-            BtnHasilRadiologi.setText("Radiologi (Tidak Ada)");
+            BtnHasilRadiologi.setText("Tidak Ada Permintaan Radiologi");
         }
         else if (adaPermintaan && !adaHasil) {
             // ADA PERMINTAAN - BELUM ADA HASIL
@@ -8533,7 +8533,7 @@ private void cekStatusLabor() {
             // TIDAK ADA PERMINTAAN
             BtnHasilLabor.setGlassColor(new java.awt.Color(255,0,0)); // merah
             BtnHasilLabor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/cancel.png")));
-            BtnHasilLabor.setText("Labor (Tidak Ada)");
+            BtnHasilLabor.setText("Tidak ada Permintaan Labor");
         }
         else if (adaPermintaan && !adaHasil) {
             // ADA PERMINTAAN, BELUM ADA HASIL

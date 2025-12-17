@@ -2495,7 +2495,7 @@ public final class DlgRawatInap extends javax.swing.JDialog {
         
         // FITUR YANG MEGATUR UNTUK MENAMBAHKAN KOLOM BUTTON FUNGSI BARU
         panelGlass12.add(BtnResume);
-        BtnResume.setBounds(1230, 70, 170,30);
+        BtnResume.setBounds(1230, 70, 200,30);
         BtnResume.setText("Resume Pasien");
         BtnResume.setFocusPainted(false);
         BtnResume.setFont(new java.awt.Font("Tahoma", 0, 11)); 
@@ -2512,7 +2512,7 @@ public final class DlgRawatInap extends javax.swing.JDialog {
         });
         
         panelGlass12.add(BtnHasilRadiologi);
-        BtnHasilRadiologi.setBounds(1230, 110, 170,30);
+        BtnHasilRadiologi.setBounds(1230, 110, 200,30);
         BtnHasilRadiologi.setText("Hasil Radiologi");
         BtnHasilRadiologi.setFocusPainted(false);
         BtnHasilRadiologi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/cancel.png")));
@@ -2530,7 +2530,7 @@ public final class DlgRawatInap extends javax.swing.JDialog {
         });
         
         panelGlass12.add(BtnHasilLabor);
-        BtnHasilLabor.setBounds(1230, 150, 170,30);
+        BtnHasilLabor.setBounds(1230, 150, 200,30);
         BtnHasilLabor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/cancel.png")));
         BtnHasilLabor.setGlassColor(new java.awt.Color(255,0,0)); // merah muda
         BtnHasilLabor.setText("Hasil Labor");
@@ -7192,7 +7192,7 @@ private void cekStatusRadiologi() {
             // TIDAK ADA PERMINTAAN
             BtnHasilRadiologi.setGlassColor(new java.awt.Color(255,0,0)); // merah
             BtnHasilRadiologi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/cancel.png")));
-            BtnHasilRadiologi.setText("Radiologi (Tidak Ada)");
+            BtnHasilRadiologi.setText("Tidak Ada Permintaan Radiologi");
         }
         else if (adaPermintaan && !adaHasil) {
             // ADA PERMINTAAN - BELUM ADA HASIL
@@ -7561,7 +7561,7 @@ private void cekStatusLabor() {
             // TIDAK ADA PERMINTAAN
             BtnHasilLabor.setGlassColor(new java.awt.Color(255,0,0)); // merah
             BtnHasilLabor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/cancel.png")));
-            BtnHasilLabor.setText("Labor (Tidak Ada)");
+            BtnHasilLabor.setText("Tidak Ada Permintaan Labor");
         }
         else if (adaPermintaan && !adaHasil) {
             // ADA PERMINTAAN, BELUM ADA HASIL

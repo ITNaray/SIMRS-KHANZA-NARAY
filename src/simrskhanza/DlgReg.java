@@ -6829,7 +6829,7 @@ public final class DlgReg extends javax.swing.JDialog {
         jLabel18.setName("jLabel18"); // NOI18N
         FormInput.add(jLabel18);
         jLabel18.setBounds(426, 102, 90, 23);
-
+        
         nmpnj.setEditable(false);
         nmpnj.setName("nmpnj"); // NOI18N
         FormInput.add(nmpnj);
