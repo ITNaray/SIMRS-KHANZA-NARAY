@@ -576,7 +576,7 @@ public final class RMDataResumePasien extends javax.swing.JDialog {
         panelGlass9.add(jLabel19);
 
         DTPCari1.setForeground(new java.awt.Color(50, 70, 50));
-        DTPCari1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "10-07-2025" }));
+        DTPCari1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "25-11-2025" }));
         DTPCari1.setDisplayFormat("dd-MM-yyyy");
         DTPCari1.setName("DTPCari1"); // NOI18N
         DTPCari1.setOpaque(false);
@@ -590,7 +590,7 @@ public final class RMDataResumePasien extends javax.swing.JDialog {
         panelGlass9.add(jLabel21);
 
         DTPCari2.setForeground(new java.awt.Color(50, 70, 50));
-        DTPCari2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "10-07-2025" }));
+        DTPCari2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "25-11-2025" }));
         DTPCari2.setDisplayFormat("dd-MM-yyyy");
         DTPCari2.setName("DTPCari2"); // NOI18N
         DTPCari2.setOpaque(false);
@@ -1074,6 +1074,11 @@ public final class RMDataResumePasien extends javax.swing.JDialog {
         KodeDokter.setEditable(false);
         KodeDokter.setName("KodeDokter"); // NOI18N
         KodeDokter.setPreferredSize(new java.awt.Dimension(80, 23));
+        KodeDokter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                KodeDokterActionPerformed(evt);
+            }
+        });
         KodeDokter.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 KodeDokterKeyPressed(evt);
@@ -2004,6 +2009,10 @@ public final class RMDataResumePasien extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_BtnDokter5ActionPerformed
 
+    private void KodeDokterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_KodeDokterActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_KodeDokterActionPerformed
+
     /**
     * @param args the command line arguments
     */
@@ -2227,7 +2236,9 @@ public final class RMDataResumePasien extends javax.swing.JDialog {
             String pemeriksaanSOAP,
             String asesmenSOAP,
             String planSOAP,
-            String evaluasiSOAP
+            String evaluasiSOAP,
+            String hasilLab,      // <-- Tambahan Parameter
+            String hasilRad
     ) {
         // 1. Keluhan dari SOAP -> field Keluhan di resume
         Keluhan.setText(keluhanSOAP);
@@ -2238,8 +2249,8 @@ public final class RMDataResumePasien extends javax.swing.JDialog {
 
         // 3. PemeriksaanPenunjang & HasilLaborat sementara dibiarkan,
         //    nanti baru diisi dari modul penunjang & lab
-        // PemeriksaanPenunjang.setText("");
-        // HasilLaborat.setText("");
+         HasilLaborat.setText(hasilLab);           // Isi kolom Lab
+         PemeriksaanPenunjang.setText(hasilRad);
 
         // 4. Plan + Evaluasi -> Obat2an (obat/nasihat pulang)
         String gabunganPlan = (planSOAP + "\n" + evaluasiSOAP).trim();
@@ -2251,13 +2262,12 @@ public final class RMDataResumePasien extends javax.swing.JDialog {
                 DiagnosaUtama.setText(asesmenSOAP);
             } else {
                 DiagnosaUtama.setText(
-                    DiagnosaUtama.getText() + " (" + asesmenSOAP + ")"
+                    DiagnosaUtama.getText()
                 );
             }
         }
     }
-
-   
+    
 
     private void getData() {
         if(tbObat.getSelectedRow()!= -1){

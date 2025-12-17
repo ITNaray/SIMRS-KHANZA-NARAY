@@ -250,6 +250,10 @@ public final class DlgRawatJalan extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         initRawatJalan();
+        updateResumeRalanUI();
+        cekStatusRadiologi();
+        cekStatusLabor();
+        setLaporanOperasiUI();
 
     this.setLocation(8,1);
     // increased dialog size to accommodate wider input panel (further enlarged)
@@ -1567,6 +1571,7 @@ public final class DlgRawatJalan extends javax.swing.JDialog {
         BtnResume = new widget.Button(); // tombol resep
         BtnHasilRadiologi = new widget.Button();
         BtnHasilLabor= new widget.Button();
+        BtnLaporanOp= new widget.Button();
         BtnAwalKeperawatanIGD = new widget.Button();
         BtnAwalKeperawatan = new widget.Button();
         BtnAwalKeperawatanGigi = new widget.Button();
@@ -2551,6 +2556,24 @@ public final class DlgRawatJalan extends javax.swing.JDialog {
         BtnHasilLabor.addActionListener(new java.awt.event.ActionListener() {
           public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BtnHasilLaborActionPerformed(evt);
+            }
+        });
+        
+    panelGlass12.add(BtnLaporanOp);
+        BtnLaporanOp.setBounds(1200, 190, 170,30);
+        BtnLaporanOp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/cancel.png")));
+        BtnLaporanOp.setGlassColor(new java.awt.Color(255,0,0)); // merah muda
+        BtnLaporanOp.setText("Laporan Operasi");
+        BtnLaporanOp.setFocusPainted(false);
+        BtnLaporanOp.setFont(new java.awt.Font("Tahoma", 0, 11)); 
+        BtnLaporanOp.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        BtnLaporanOp.setMargin(new java.awt.Insets(1, 1, 1, 1));
+        BtnLaporanOp.setName("BtnLaporanOperasi"); 
+        BtnLaporanOp.setPreferredSize(new java.awt.Dimension(190, 23));
+        BtnLaporanOp.setRoundRect(true);
+        BtnLaporanOp.addActionListener(new java.awt.event.ActionListener() {
+          public void actionPerformed(java.awt.event.ActionEvent evt) {
+               BtnLaporanOperasiActionPerformed(evt);
             }
         });
 
@@ -7755,9 +7778,12 @@ private void BtnResumeActionPerformed(java.awt.event.ActionEvent evt) {
         String plan      = (TindakLanjut.getText() + "\n" +
                             TInstruksi.getText()).trim();      
         String evaluasi  = TEvaluasi.getText();                
+        
+        String dataLab = getHasilLab(norawat);
+        String dataRad = getHasilRad(norawat);
         // Tampilkan form + isi dari SOAP
         resume.tampil();
-        resume.setDataDariSOAP(keluhan, obj, asesmen, plan, evaluasi);
+       resume.setDataDariSOAP(keluhan, obj, asesmen, plan, evaluasi, dataLab, dataRad);
 
     } else {
         resume.tampil();
@@ -7779,8 +7805,89 @@ private void BtnResumeActionPerformed(java.awt.event.ActionEvent evt) {
     this.setCursor(Cursor.getDefaultCursor());
 }
 
-        //fungsi untuk membuat indikator resume
-        private void updateResumeRalanUI() {
+    // --- 1. Fungsi Tarik Hasil Lab ---
+    private String getHasilRad(String noRawat) {
+    // Default kita isi "-" agar jika error/kosong, tetap muncul strip
+    String hasil = "-"; 
+    
+    // Gunakan try-catch agar jika query gagal, program tidak berhenti
+    try {
+        // Cek dulu apakah tabel/kolomnya benar via try
+        PreparedStatement psRad = koneksi.prepareStatement(
+            "select hasil from periksa_radiologi where no_rawat=?");
+            try {
+                psRad.setString(1, noRawat);
+                ResultSet rsRad = psRad.executeQuery();
+
+                StringBuilder sb = new StringBuilder();
+                boolean adaData = false;
+
+                while (rsRad.next()) {
+                    adaData = true;
+                    // Cek null agar tidak error jika kolom isinya NULL
+                    String isi = rsRad.getString("hasil");
+                    if(isi != null && !isi.equals("")){
+                        sb.append(isi).append("\n");
+                    }
+                }
+
+                if(adaData && sb.length() > 0){
+                    hasil = sb.toString().trim();
+                }
+
+            } catch (Exception e) {
+                // Jika error (misal kolom tidak ketemu), diam saja & biarkan hasil tetap "-"
+                System.out.println("Notifikasi Error Rad: " + e);
+            } finally {
+                if(psRad != null) psRad.close();
+            }
+        } catch (Exception e) {
+            System.out.println("Error Koneksi Rad: " + e);
+        }
+        return hasil;
+    }
+
+    // --- 2. Fungsi Tarik Hasil Radiologi ---
+    private String getHasilLab(String noRawat) {
+    String hasil = "-"; // Default strip
+    try {
+        PreparedStatement psLab = koneksi.prepareStatement(
+            "select template_laboratorium.Pemeriksaan, detail_periksa_lab.nilai, template_laboratorium.satuan " +
+            "from detail_periksa_lab inner join template_laboratorium " +
+            "on detail_periksa_lab.id_template=template_laboratorium.id_template " +
+            "where detail_periksa_lab.no_rawat=? order by template_laboratorium.urut");
+        try {
+            psLab.setString(1, noRawat);
+            ResultSet rsLab = psLab.executeQuery();
+            StringBuilder sb = new StringBuilder();
+            boolean adaData = false;
+            
+            while (rsLab.next()) {
+                adaData = true;
+                sb.append(rsLab.getString("Pemeriksaan")).append(": ")
+                  .append(rsLab.getString("nilai")).append(" ")
+                  .append(rsLab.getString("satuan")).append(", ");
+            }
+            
+            if(adaData && sb.length() > 2){
+                String temp = sb.toString();
+                hasil = temp.substring(0, temp.length() - 2);
+            }
+            
+        } catch (Exception e) {
+            System.out.println("Notifikasi Error Lab: " + e);
+        } finally {
+            if(psLab != null) psLab.close();
+        }
+    } catch (Exception e) {
+        System.out.println("Error Koneksi Lab: " + e);
+    }
+    return hasil;
+}
+
+
+    //fungsi untuk membuat indikator resume
+    private void updateResumeRalanUI() {
         String norawat = TNoRw.getText().trim();
 
         // Kalau form belum ada No Rawat -> disable tombol
@@ -8443,6 +8550,69 @@ private void cekStatusLabor() {
 
     } catch (Exception e) {
         e.printStackTrace();
+    }
+}
+
+//btnoperasi 
+ private void BtnLaporanOperasiActionPerformed(java.awt.event.ActionEvent evt) {                                                  
+    if(TNoRw.getText().trim().equals("")){
+        JOptionPane.showMessageDialog(null,"Maaf, Silahkan anda pilih dulu pasien...!!!");
+        TCari.requestFocus(); 
+    } else {
+        DlgTagihanOperasi dlgro = new DlgTagihanOperasi(null, false);
+        dlgro.setSize(internalFrame1.getWidth()-20, internalFrame1.getHeight()-20);
+        dlgro.setLocationRelativeTo(internalFrame1);
+        String statusPasien = "Ralan";
+        if(Sequel.cariInteger("select count(no_rawat) from kamar_inap where no_rawat=?", TNoRw.getText()) > 0){
+            statusPasien = "Ranap";
+        }
+
+        dlgro.setNoRm(
+            TNoRw.getText(), 
+            TPasien.getText(),
+            statusPasien      
+        );
+        
+        dlgro.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent e) {
+                setLaporanOperasiUI(); 
+            }
+        });
+        
+        // 5. Tampilkan
+        dlgro.setVisible(true);
+    }
+}
+ 
+ // Fungsi untuk mengecek status Laporan Operasi
+private void setLaporanOperasiUI() {
+    String norawat = TNoRw.getText().trim();
+
+    if(norawat.equals("")){
+        BtnLaporanOp.setText("Laporan Operasi");
+        BtnLaporanOp.setEnabled(false);
+        BtnLaporanOp.setGlassColor(new java.awt.Color(240,240,240));
+        return;
+    }
+    int jml = Sequel.cariInteger(
+        "SELECT COUNT(*) FROM laporan_operasi WHERE no_rawat=?", 
+        norawat
+    );
+
+    if(jml > 0){
+  
+        BtnLaporanOp.setText("Lihat Laporan");
+        BtnLaporanOp.setEnabled(true);
+        BtnLaporanOp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/accept.png")));
+        BtnLaporanOp.setGlassColor(new java.awt.Color(0,153,0)); // Hijau
+        BtnLaporanOp.setRoundRect(true);
+    } else {
+        BtnLaporanOp.setText("Buat Laporan");
+        BtnLaporanOp.setEnabled(true);
+        BtnLaporanOp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/cancel.png")));
+        BtnLaporanOp.setGlassColor(new java.awt.Color(255,0,0)); // Merah
+        BtnLaporanOp.setRoundRect(true);
     }
 }
 
@@ -11017,6 +11187,7 @@ private void cekStatusLabor() {
     private widget.Button BtnResume;
     private widget.Button BtnHasilRadiologi;
     private widget.Button BtnHasilLabor;
+    private widget.Button BtnLaporanOp;
     private widget.Button BtnRiwayat;
     private widget.Button BtnRujukInternal;
     private widget.Button BtnRujukKeluar;
@@ -11531,6 +11702,7 @@ private void cekStatusLabor() {
         updateResumeRalanUI();
         cekStatusRadiologi();
         cekStatusLabor();
+        setLaporanOperasiUI();
     }
     
     private void isForm(){
@@ -12507,6 +12679,7 @@ private void cekStatusLabor() {
         updateResumeRalanUI();
         cekStatusRadiologi();
         cekStatusLabor();
+        setLaporanOperasiUI();
 
     }
     

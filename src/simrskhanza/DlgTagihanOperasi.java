@@ -58,6 +58,7 @@ public class DlgTagihanOperasi extends javax.swing.JDialog {
     public DlgTagihanOperasi(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        //isCek();
 
         Object[] row={"P","Kode Paket","Nama Operasi","Kategori","Operator 1","Operator 2","Operator 3",
                       "Asisten Op 1","Asisten Op 2","Asisten Op 3","Instrumen","dr Anak","Perawat Resus","dr Anastesi",
@@ -103,8 +104,9 @@ public class DlgTagihanOperasi extends javax.swing.JDialog {
             }else if(i==3){
                 column.setPreferredWidth(100);
             }else{
-                column.setMinWidth(0);
-                column.setMaxWidth(0);
+//                column.setMinWidth(0);
+//                column.setMaxWidth(0);
+                column.setPreferredWidth(100);
             }
         }
         tbtindakan.setDefaultRenderer(Object.class, new WarnaTable());
@@ -3619,16 +3621,31 @@ private void ChkInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     }
     
 
-    
+    //penambahan oerator auto login ketika isi tagihan
     public void isCek(){
-       // Valid.autoNomer3("select ifnull(MAX(CONVERT(RIGHT(nota_jual,6),signed)),0) from penjualan ","PJ",6,NoNota); 
-        TCari.requestFocus();
-        if(akses.getjml2()>=1){
-            BtnSimpan.setEnabled(akses.getoperasi());
-            BtnTambahOperasi.setEnabled(akses.gettarif_operasi());
-            BtnTambah.setEnabled(akses.getoperasi());
-        }        
-    }
+    // 1. Fokuskan kursor (Standar)
+    TCari.requestFocus();
+    if(akses.getjml2()>=1){
+        BtnSimpan.setEnabled(akses.getoperasi());
+        BtnTambahOperasi.setEnabled(akses.gettarif_operasi());
+        BtnTambah.setEnabled(akses.getoperasi());
+        String kodeDokterLogin = akses.getkode(); 
+
+        if(kodeDokterLogin != null && !kodeDokterLogin.equals("")){
+            String namaDokter = Sequel.cariIsi("select nm_dokter from dokter where kd_dokter=?", kodeDokterLogin);
+
+            if(!namaDokter.equals("")){
+
+                nmoperator1.setText(namaDokter);
+                kdoperator1.setText(kodeDokterLogin);
+                kdoperator1.setEditable(false);
+                nmoperator1.setEditable(false);
+                BtnOperator1.setEnabled(false);
+                System.out.println("Auto-Fill Berhasil. Kode: " + kodeDokterLogin + ", Nama: " + namaDokter);
+            }
+        }
+    }       
+}
     
     public void setNoRm(String norm,String nama,String posisi){
         TNoRw.setText(norm);
@@ -3654,6 +3671,7 @@ private void ChkInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         }
         tampil();
         tampil2();
+        isCek();
     }
     
     public void setNoRm(String norm,String nama,String posisi,String KodeOperator,String NamaOperator){
