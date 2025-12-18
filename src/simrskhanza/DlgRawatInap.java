@@ -2182,6 +2182,11 @@ public final class DlgRawatInap extends javax.swing.JDialog {
             }
         });
         scrollPane1.setViewportView(TKeluhan);
+        // Font Ngetik
+        TKeluhan.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 16));
+TKeluhan.setLineWrap(true);
+TKeluhan.setWrapStyleWord(true);
+TKeluhan.setMargin(new java.awt.Insets(5, 5, 5, 5));
 
         panelGlass12.add(scrollPane1);
         scrollPane1.setBounds(73, 70, 520, 70);
@@ -2199,6 +2204,11 @@ public final class DlgRawatInap extends javax.swing.JDialog {
             }
         });
         scrollPane2.setViewportView(TPemeriksaan);
+        //Font Ngetik
+        TPemeriksaan.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 16));
+TPemeriksaan.setLineWrap(true);
+TPemeriksaan.setWrapStyleWord(true);
+TPemeriksaan.setMargin(new java.awt.Insets(5, 5, 5, 5));
 
         panelGlass12.add(scrollPane2);
         scrollPane2.setBounds(73, 150, 520, 70);
@@ -2226,6 +2236,11 @@ public final class DlgRawatInap extends javax.swing.JDialog {
             }
         });
         scrollPane3.setViewportView(TPenilaian);
+        // Font Ngetik
+        TPenilaian.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 16));
+TPenilaian.setLineWrap(true);
+TPenilaian.setWrapStyleWord(true);
+TPenilaian.setMargin(new java.awt.Insets(5, 5, 5, 5));
 
         panelGlass12.add(scrollPane3);
         scrollPane3.setBounds(690, 70, 520, 70);
@@ -2253,7 +2268,11 @@ public final class DlgRawatInap extends javax.swing.JDialog {
             }
         });
         scrollPane4.setViewportView(TindakLanjut);
-
+        // Font Ngetik
+        TindakLanjut.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 16));
+TindakLanjut.setLineWrap(true);
+TindakLanjut.setWrapStyleWord(true);
+TindakLanjut.setMargin(new java.awt.Insets(5, 5, 5, 5));
         panelGlass12.add(scrollPane4);
         scrollPane4.setBounds(690, 150, 520, 90);
 
@@ -2319,6 +2338,11 @@ public final class DlgRawatInap extends javax.swing.JDialog {
             }
         });
         scrollPane7.setViewportView(TInstruksi);
+        // Font Ngetik
+        TInstruksi.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 16));
+TInstruksi.setLineWrap(true);
+TInstruksi.setWrapStyleWord(true);
+TInstruksi.setMargin(new java.awt.Insets(5, 5, 5, 5));
 
         panelGlass12.add(scrollPane7);
         scrollPane7.setBounds(690, 250, 520, 60);
@@ -2382,6 +2406,11 @@ public final class DlgRawatInap extends javax.swing.JDialog {
             }
         });
         scrollPane8.setViewportView(TEvaluasi);
+        // Font Ngetik
+        TEvaluasi.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 16));
+TEvaluasi.setLineWrap(true);
+TEvaluasi.setWrapStyleWord(true);
+TEvaluasi.setMargin(new java.awt.Insets(5, 5, 5, 5));
 
         panelGlass12.add(scrollPane8);
         scrollPane8.setBounds(690, 320, 520, 60);

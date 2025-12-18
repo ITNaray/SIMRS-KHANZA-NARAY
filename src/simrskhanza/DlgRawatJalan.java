@@ -2371,7 +2371,12 @@ public final class DlgRawatJalan extends javax.swing.JDialog {
             }
         });
         scrollPane1.setViewportView(TKeluhan);
-
+        // Ketika Ngetik Fontnya Besar
+    TKeluhan.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 16));
+TKeluhan.setLineWrap(true);
+TKeluhan.setWrapStyleWord(true);
+TKeluhan.setMargin(new java.awt.Insets(5, 5, 5, 5));
+    
     panelGlass12.add(scrollPane1);
     // slightly larger Subjek area
     scrollPane1.setBounds(73, 70, 520, 70);
@@ -2401,6 +2406,11 @@ public final class DlgRawatJalan extends javax.swing.JDialog {
             }
         });
         scrollPane2.setViewportView(TPemeriksaan);
+        // Font Besar Ketika Ngetik
+        TPemeriksaan.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 16));
+TPemeriksaan.setLineWrap(true);
+TPemeriksaan.setWrapStyleWord(true);
+TPemeriksaan.setMargin(new java.awt.Insets(5, 5, 5, 5));
 
     panelGlass12.add(scrollPane2);
     // slightly larger Objek area (left column) moved down to avoid overlap with Subjek
@@ -2500,6 +2510,11 @@ public final class DlgRawatJalan extends javax.swing.JDialog {
             }
         });
         scrollPane3.setViewportView(TPenilaian);
+        // Font Besar Ketik Ngetik
+TPenilaian.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 16));
+TPenilaian.setLineWrap(true);
+TPenilaian.setWrapStyleWord(true);
+TPenilaian.setMargin(new java.awt.Insets(5, 5, 5, 5));
 
     panelGlass12.add(scrollPane3);
     // slightly larger Asesmen area (right column) aligned with Subjek
@@ -2559,23 +2574,23 @@ public final class DlgRawatJalan extends javax.swing.JDialog {
             }
         });
         
-    panelGlass12.add(BtnLaporanOp);
-        BtnLaporanOp.setBounds(1200, 190, 200,30);
-        BtnLaporanOp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/cancel.png")));
-        BtnLaporanOp.setGlassColor(new java.awt.Color(255,0,0)); // merah muda
-        BtnLaporanOp.setText("Laporan Operasi");
-        BtnLaporanOp.setFocusPainted(false);
-        BtnLaporanOp.setFont(new java.awt.Font("Tahoma", 0, 11)); 
-        BtnLaporanOp.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        BtnLaporanOp.setMargin(new java.awt.Insets(1, 1, 1, 1));
-        BtnLaporanOp.setName("BtnLaporanOperasi"); 
-        BtnLaporanOp.setPreferredSize(new java.awt.Dimension(190, 23));
-        BtnLaporanOp.setRoundRect(true);
-        BtnLaporanOp.addActionListener(new java.awt.event.ActionListener() {
-          public void actionPerformed(java.awt.event.ActionEvent evt) {
-               BtnLaporanOperasiActionPerformed(evt);
-            }
-        });
+//    panelGlass12.add(BtnLaporanOp);
+//        BtnLaporanOp.setBounds(1200, 190, 200,30);
+//        BtnLaporanOp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/cancel.png")));
+//        BtnLaporanOp.setGlassColor(new java.awt.Color(255,0,0)); // merah muda
+//        BtnLaporanOp.setText("Laporan Operasi");
+//        BtnLaporanOp.setFocusPainted(false);
+//        BtnLaporanOp.setFont(new java.awt.Font("Tahoma", 0, 11)); 
+//        BtnLaporanOp.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+//        BtnLaporanOp.setMargin(new java.awt.Insets(1, 1, 1, 1));
+//        BtnLaporanOp.setName("BtnLaporanOperasi"); 
+//        BtnLaporanOp.setPreferredSize(new java.awt.Dimension(190, 23));
+//        BtnLaporanOp.setRoundRect(true);
+//        BtnLaporanOp.addActionListener(new java.awt.event.ActionListener() {
+//          public void actionPerformed(java.awt.event.ActionEvent evt) {
+//               BtnLaporanOperasiActionPerformed(evt);
+//            }
+//        });
 
 
     scrollPane6.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.BLACK,1));
@@ -2591,6 +2606,11 @@ public final class DlgRawatJalan extends javax.swing.JDialog {
             }
         });
         scrollPane6.setViewportView(TindakLanjut);
+    // Font Besar Ketika Ngetik
+    TindakLanjut.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 16));
+TindakLanjut.setLineWrap(true);
+TindakLanjut.setWrapStyleWord(true);
+TindakLanjut.setMargin(new java.awt.Insets(5, 5, 5, 5));
 
     panelGlass12.add(scrollPane6);
     // slightly larger Plan area (right column) aligned with Objek
@@ -2676,7 +2696,11 @@ public final class DlgRawatJalan extends javax.swing.JDialog {
             }
         });
         scrollPane7.setViewportView(TInstruksi);
-
+    TInstruksi.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 16));
+TInstruksi.setLineWrap(true);
+TInstruksi.setWrapStyleWord(true);
+TInstruksi.setMargin(new java.awt.Insets(5, 5, 5, 5));
+    
     panelGlass12.add(scrollPane7);
     // Instruksi area (right column) placed under Plan
     scrollPane7.setBounds(660, 250, 520, 60);
@@ -2715,6 +2739,11 @@ public final class DlgRawatJalan extends javax.swing.JDialog {
             }
         });
         scrollPane8.setViewportView(TEvaluasi);
+        // Font Besar Ketika Ngetik
+    TEvaluasi.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 16));
+TEvaluasi.setLineWrap(true);
+TEvaluasi.setWrapStyleWord(true);
+TEvaluasi.setMargin(new java.awt.Insets(5, 5, 5, 5));
 
     panelGlass12.add(scrollPane8);
     // Evaluasi area (right column) placed below Instruksi

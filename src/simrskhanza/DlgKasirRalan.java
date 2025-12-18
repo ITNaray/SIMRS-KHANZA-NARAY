@@ -2616,6 +2616,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         MnKamarInap.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         MnKamarInap.setName("MnKamarInap"); // NOI18N
         MnKamarInap.setPreferredSize(new java.awt.Dimension(200, 26));
+        MnKamarInap.setVisible(false);
         MnKamarInap.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MnKamarInapActionPerformed(evt);
@@ -8058,7 +8059,7 @@ private void MnKamarInapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                         }
                         kamarinap.isCek();
                         kamarinap.setNoRm(TNoRw.getText(),TNoRMCari.getText(),TPasienCari.getText()); 
-                        kamarinap.setVisible(true);                    
+                        kamarinap.setVisible(true);                 
                     }
                 }
             }            
