@@ -79,12 +79,6 @@ public class WarnaTable2 extends DefaultTableCellRenderer {
             component.setForeground(new Color(70,70,70));
         }
 
-        // D. Warna Seleksi (Paling Penting)
-        if (isSelected) {
-            component.setBackground(new Color(255, 255, 0)); // Kuning
-            component.setForeground(Color.BLACK);
-        }
-        
         return component;
     }
 }
