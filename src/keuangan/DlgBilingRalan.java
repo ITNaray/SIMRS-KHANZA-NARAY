@@ -73,8 +73,11 @@ public class DlgBilingRalan extends javax.swing.JDialog {
             Operasi_Ralan="",tampilkan_ppnobat_ralan="",rincianoperasi="",centangobatralan="No",
             sqlpscekbilling="select count(billing.no_rawat) from billing where billing.no_rawat=?",
             sqlpsreg="select reg_periksa.tgl_registrasi,reg_periksa.no_rkm_medis,reg_periksa.kd_poli,reg_periksa.no_rawat,"+
-                     "reg_periksa.biaya_reg,current_time() as jam,reg_periksa.umurdaftar,reg_periksa.sttsumur "+
-                     "from reg_periksa where reg_periksa.no_rawat=?",
+                     "reg_periksa.biaya_reg,current_time() as jam,reg_periksa.umurdaftar,reg_periksa.sttsumur,"+
+                     "penjab.png_jawab "+
+                     "from reg_periksa "+
+                    "inner join penjab on reg_periksa.kd_pj=penjab.kd_pj "+ 
+                    "where reg_periksa.no_rawat=?",
             sqlpscaripoli="select poliklinik.nm_poli from poliklinik where poliklinik.kd_poli=?",
             sqlpscarialamat="select concat(pasien.alamat,', ',kelurahan.nm_kel,', ',kecamatan.nm_kec,', ',kabupaten.nm_kab) from pasien "+
                         "inner join kelurahan inner join kecamatan inner join kabupaten on pasien.kd_kel=kelurahan.kd_kel "+
@@ -4426,7 +4429,8 @@ private void MnPeriksaLabActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
         isHitung();          
         isKembali();
     }
-
+    
+    //tambah asuransi
     private void prosesCariReg() {        
         Valid.tabelKosong(tabModeRwJlDr);
         try{   
@@ -4478,6 +4482,13 @@ private void MnPeriksaLabActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                     tabModeRwJlDr.addRow(new Object[]{true,"Tanggal & Jam",": "+rsreg.getString("tgl_registrasi")+" "+rsreg.getString("jam"),"",null,null,null,null,"-"});
                     tabModeRwJlDr.addRow(new Object[]{true,"No.RM",": "+TNoRM.getText(),"",null,null,null,null,"-"});
                     tabModeRwJlDr.addRow(new Object[]{true,"Nama Pasien",": "+TPasien.getText()+" ("+rsreg.getString("umurdaftar")+rsreg.getString("sttsumur")+")","",null,null,null,null,"-"});
+                    // --- PASTIKAN KODINGAN INI ADA DI SINI ---
+try {
+    // Kita pakai try-catch kecil agar kalau kolom error, program tidak berhenti total
+    tabModeRwJlDr.addRow(new Object[]{true,"Jenis Bayar",": "+rsreg.getString("png_jawab"),"",null,null,null,null,"-"});
+} catch (Exception e) {
+    System.out.println("Error Jenis Bayar: " + e);
+}
                     pscarialamat=koneksi.prepareStatement(sqlpscarialamat); 
                     try{
                         pscarialamat.setString(1,TNoRM.getText());

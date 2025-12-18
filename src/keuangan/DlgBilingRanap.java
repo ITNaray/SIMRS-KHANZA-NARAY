@@ -5021,23 +5021,28 @@ private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
         Valid.tabelKosong(tabModeRwJlDr);
         try{  
             psreg=koneksi.prepareStatement(
-                    "select reg_periksa.no_rkm_medis,concat(DATE_FORMAT(reg_periksa.tgl_registrasi, '%e %M %Y'),' ',reg_periksa.jam_reg) as registrasi,kamar_inap.kd_kamar,concat(if(kamar_inap.tgl_keluar='0000-00-00',DATE_FORMAT(CURDATE(), '%e %M %Y'),DATE_FORMAT(kamar_inap.tgl_keluar, '%e %M %Y')),' ',kamar_inap.jam_keluar) as keluar,  "+
-                    "(select sum(kamar_inap.lama) from kamar_inap where kamar_inap.no_rawat=reg_periksa.no_rawat ) as lama,reg_periksa.biaya_reg,reg_periksa.umurdaftar,reg_periksa.sttsumur,reg_periksa.tgl_registrasi "+
-                    "from reg_periksa inner join kamar_inap on reg_periksa.no_rawat=kamar_inap.no_rawat where reg_periksa.no_rawat=? "+
-                    "order by kamar_inap.tgl_keluar desc limit 1");
+                "select reg_periksa.no_rkm_medis,concat(DATE_FORMAT(reg_periksa.tgl_registrasi, '%e %M %Y'),' ',reg_periksa.jam_reg) as registrasi,kamar_inap.kd_kamar,concat(if(kamar_inap.tgl_keluar='0000-00-00',DATE_FORMAT(CURDATE(), '%e %M %Y'),DATE_FORMAT(kamar_inap.tgl_keluar, '%e %M %Y')),' ',kamar_inap.jam_keluar) as keluar, " +
+                "(select sum(kamar_inap.lama) from kamar_inap where kamar_inap.no_rawat=reg_periksa.no_rawat ) as lama,reg_periksa.biaya_reg,reg_periksa.umurdaftar,reg_periksa.sttsumur,reg_periksa.tgl_registrasi, " +
+                "penjab.png_jawab " + // <--- 1. TAMBAHKAN KOLOM INI (JANGAN LUPA KOMA DI BARIS ATASNYA)
+                "from reg_periksa " +
+                "inner join kamar_inap on reg_periksa.no_rawat=kamar_inap.no_rawat " +
+                "inner join penjab on reg_periksa.kd_pj=penjab.kd_pj " + // <--- 2. TAMBAHKAN JOIN INI
+                "where reg_periksa.no_rawat=? " +
+                "order by kamar_inap.tgl_keluar desc limit 1");
             try {
                 psreg.setString(1,TNoRw.getText());
                 rsreg=psreg.executeQuery();            
                 while(rsreg.next()){
                     tabModeRwJlDr.addRow(new Object[]{true,"No.Nota",": "+Valid.autoNomer3("select ifnull(MAX(CONVERT(RIGHT(no_nota,4),signed)),0) from nota_inap where tanggal='"+Valid.SetTgl(DTPTgl.getSelectedItem()+"").substring(0,10)+"' ",Valid.SetTgl(DTPTgl.getSelectedItem()+"").substring(0,10).replaceAll("-","/")+"/RI",4),"",null,null,null,null,"-"});
                     
-                    pskamar=koneksi.prepareStatement("select concat(kamar.kd_kamar,', ',bangsal.nm_bangsal) from bangsal inner join kamar "+
-                        "on kamar.kd_bangsal=bangsal.kd_bangsal where kamar.kd_kamar=?");
+            pskamar=koneksi.prepareStatement(
+                "select concat(kamar.kelas,', ',bangsal.nm_bangsal) from bangsal inner join kamar "+
+                "on kamar.kd_bangsal=bangsal.kd_bangsal where kamar.kd_kamar=?");
                     try {
                         pskamar.setString(1,rsreg.getString("kd_kamar"));
                         rskamar=pskamar.executeQuery();
                         if(rskamar.next()){
-                            tabModeRwJlDr.addRow(new Object[]{true,"Bangsal/Kamar",": "+rskamar.getString(1),"",null,null,null,null,"-"});
+                            tabModeRwJlDr.addRow(new Object[]{true,"Kamar/Kelas",": "+rskamar.getString(1),"",null,null,null,null,"-"});
                         }           
                     } catch (Exception e) {
                         System.out.println("Notifikasi : "+e);
@@ -5081,6 +5086,12 @@ private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
                             psanak.close();
                         }
                     }
+                    
+                    try {
+                     tabModeRwJlDr.addRow(new Object[]{true,"Jenis Bayar",": "+rsreg.getString("png_jawab"),"",null,null,null,null,"-"});
+                        } catch (Exception e) {
+                             // Kosongkan jika error
+                        }
 
                     pscarialamat=koneksi.prepareStatement(
                         "select concat(pasien.alamat,', ',kelurahan.nm_kel,', ',kecamatan.nm_kec,', ',kabupaten.nm_kab) from pasien "+
