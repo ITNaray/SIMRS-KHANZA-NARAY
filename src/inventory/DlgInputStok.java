@@ -51,7 +51,7 @@ public class DlgInputStok extends javax.swing.JDialog {
     private double ttl=0,y=0,ttl2=0,y2=0,stokbarang=0,kurang=0,harga=0;
     private int jml=0,i=0,index=0;
     private String[] real,kodebarang,namabarang,kategori,satuan,nobatch,nofaktur;
-    private double[] hargabeli,stok,selisih,lebih,nomihilang,nomilebih;
+    private double[] hargabeli,stok,selisih,lebih,nomihilang,nomilebih,stokmin;
     private WarnaTable2 warna=new WarnaTable2();
     private boolean aktif=false,sukses=true;
     private String aktifkanbatch="no",hppfarmasi="",DEPOAKTIFOBAT="",order="order by databarang.nama_brng";
@@ -69,7 +69,7 @@ public class DlgInputStok extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
 
-        Object[] row={"Real","Kode Barang","Nama Barang","Jenis","Satuan","Harga","Stok","Selisih","Lebih","Nominal Hilang(Rp)","Nominal Lebih(Rp)","No.Batch","No.Faktur"};
+        Object[] row={"Real","Kode Barang","Nama Barang","Jenis","Satuan","Harga","Stok","Selisih","Lebih","Nominal Hilang(Rp)","Nominal Lebih(Rp)","No.Batch","No.Faktur","Stok Min"};
         tabMode=new DefaultTableModel(null,row){
             @Override public boolean isCellEditable(int rowIndex, int colIndex){
                 boolean a = false;
@@ -82,7 +82,7 @@ public class DlgInputStok extends javax.swing.JDialog {
                 java.lang.String.class,java.lang.String.class,java.lang.String.class,java.lang.String.class,
                 java.lang.String.class,java.lang.Double.class,java.lang.Double.class,java.lang.Double.class,
                 java.lang.Double.class,java.lang.Double.class,java.lang.Double.class,java.lang.String.class,
-                java.lang.String.class  
+                java.lang.String.class,java.lang.Double.class  
              };
              @Override
              public Class getColumnClass(int columnIndex) {
@@ -94,7 +94,7 @@ public class DlgInputStok extends javax.swing.JDialog {
         tbDokter.setPreferredScrollableViewportSize(new Dimension(800,800));
         tbDokter.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-        for (i = 0; i < 13; i++) {
+        for (i = 0; i < 14; i++) {
             TableColumn column = tbDokter.getColumnModel().getColumn(i);
             if(i==0){
                 column.setPreferredWidth(42);
@@ -123,9 +123,13 @@ public class DlgInputStok extends javax.swing.JDialog {
             }else if(i==12){
                 column.setPreferredWidth(100);
             }
+            else if(i==13){
+                column.setPreferredWidth(100);
+            }
         }
         warna.kolom=0;
         tbDokter.setDefaultRenderer(Object.class,warna);
+        tbDokter.setDefaultRenderer(Double.class,warna);
 
         kdgudang.setDocument(new batasInput((byte)5).getKata(kdgudang));
         catatan.setDocument(new batasInput((byte)60).getKata(catatan));  
@@ -1113,61 +1117,82 @@ private void BtnGudangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
 }//GEN-LAST:event_BtnGudangActionPerformed
 
     private void ppStokActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ppStokActionPerformed
-        if(nmgudang.getText().trim().equals("")||kdgudang.getText().trim().equals("")){
-            Valid.textKosong(kdgudang,"Lokasi");
-        }else{
-            for(i=0;i<tbDokter.getRowCount();i++){
-                try {
-                    stokbarang=0;
-                    if(aktifkanbatch.equals("yes")){
-                        psstok=koneksi.prepareStatement("select ifnull(gudangbarang.stok,'0') from gudangbarang where gudangbarang.kd_bangsal=? and gudangbarang.kode_brng=? and gudangbarang.no_batch=? and gudangbarang.no_faktur=?");
-                        try {
-                            psstok.setString(1,kdgudang.getText());
-                            psstok.setString(2,tbDokter.getValueAt(i,1).toString());
-                            psstok.setString(3,tbDokter.getValueAt(i,11).toString());
-                            psstok.setString(4,tbDokter.getValueAt(i,12).toString());
-                            rsstok=psstok.executeQuery();
-                            if(rsstok.next()){
-                                stokbarang=rsstok.getDouble(1);
-                            }
-                        } catch (Exception e) {
-                            tbDokter.setValueAt(0,i,6);
-                        } finally{
-                            if(rsstok!=null){
-                                rsstok.close();
-                            }
-                            if(psstok!=null){
-                                psstok.close();
-                            }
-                        }
-                    }else{
-                        psstok=koneksi.prepareStatement("select ifnull(gudangbarang.stok,'0') from gudangbarang where gudangbarang.kd_bangsal=? and gudangbarang.kode_brng=? and gudangbarang.no_batch='' and gudangbarang.no_faktur=''");
-                        try {
-                            psstok.setString(1,kdgudang.getText());
-                            psstok.setString(2,tbDokter.getValueAt(i,1).toString());
-                            rsstok=psstok.executeQuery();
-                            if(rsstok.next()){
-                                stokbarang=rsstok.getDouble(1);
-                            }
-                        } catch (Exception e) {
-                            tbDokter.setValueAt(0,i,6);
-                        } finally{
-                            if(rsstok!=null){
-                                rsstok.close();
-                            }
-                            if(psstok!=null){
-                                psstok.close();
-                            }
-                        }
-                    }
-                        
-                    tbDokter.setValueAt(stokbarang,i,6);
-                } catch (Exception e) {
-                    tbDokter.setValueAt(0,i,6);
-                }
-            }
-        }   
+          hitungStok();
     }//GEN-LAST:event_ppStokActionPerformed
+    // Method baru khusus untuk menghitung stok & stok min otomatis
+    private void hitungStok() {
+        // Cek apakah lokasi gudang sudah terpilih
+        if (nmgudang.getText().trim().equals("") || kdgudang.getText().trim().equals("")) {
+            // Jika gudang kosong, tidak usah hitung (biar tidak error)
+            return; 
+        }
+
+        PreparedStatement psstokmin = null;
+        ResultSet rsstokmin = null;
+
+        // Loop semua baris di tabel yang sudah tampil
+        for (i = 0; i < tbDokter.getRowCount(); i++) {
+            try {
+                // --- 1. AMBIL STOK REAL (GUDANG) ---
+                stokbarang = 0;
+                if (aktifkanbatch.equals("yes")) {
+                    psstok = koneksi.prepareStatement("select ifnull(gudangbarang.stok,'0') from gudangbarang where gudangbarang.kd_bangsal=? and gudangbarang.kode_brng=? and gudangbarang.no_batch=? and gudangbarang.no_faktur=?");
+                    try {
+                        psstok.setString(1, kdgudang.getText());
+                        psstok.setString(2, tbDokter.getValueAt(i, 1).toString());
+                        psstok.setString(3, tbDokter.getValueAt(i, 11).toString());
+                        psstok.setString(4, tbDokter.getValueAt(i, 12).toString());
+                        rsstok = psstok.executeQuery();
+                        if (rsstok.next()) {
+                            stokbarang = rsstok.getDouble(1);
+                        }
+                    } catch (Exception e) {
+                        stokbarang = 0;
+                    } finally {
+                        if (rsstok != null) { rsstok.close(); }
+                        if (psstok != null) { psstok.close(); }
+                    }
+                } else {
+                    psstok = koneksi.prepareStatement("select ifnull(gudangbarang.stok,'0') from gudangbarang where gudangbarang.kd_bangsal=? and gudangbarang.kode_brng=? and gudangbarang.no_batch='' and gudangbarang.no_faktur=''");
+                    try {
+                        psstok.setString(1, kdgudang.getText());
+                        psstok.setString(2, tbDokter.getValueAt(i, 1).toString());
+                        rsstok = psstok.executeQuery();
+                        if (rsstok.next()) {
+                            stokbarang = rsstok.getDouble(1);
+                        }
+                    } catch (Exception e) {
+                        stokbarang = 0;
+                    } finally {
+                        if (rsstok != null) { rsstok.close(); }
+                        if (psstok != null) { psstok.close(); }
+                    }
+                }
+                tbDokter.setValueAt(stokbarang, i, 6); // Update Kolom Stok Real
+
+                // --- 2. AMBIL STOK MIN (DATABARANG) ---
+                try {
+                    psstokmin = koneksi.prepareStatement("select stokminimal from databarang where kode_brng=?");
+                    psstokmin.setString(1, tbDokter.getValueAt(i, 1).toString());
+                    rsstokmin = psstokmin.executeQuery();
+                    if (rsstokmin.next()) {
+                        // Ambil kolom ke-1 (stokmin)
+                        tbDokter.setValueAt(rsstokmin.getDouble(1), i, 13); 
+                    } else {
+                        tbDokter.setValueAt(0, i, 13);
+                    }
+                } catch (Exception e) {
+                    tbDokter.setValueAt(0, i, 13);
+                } finally {
+                    if (rsstokmin != null) { rsstokmin.close(); }
+                    if (psstokmin != null) { psstokmin.close(); }
+                }
+
+            } catch (Exception e) {
+                System.out.println("Error Hitung Stok: "+e);
+            }
+        }
+    }
 
     private void tbDokterKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbDokterKeyReleased
         if(tabMode.getRowCount()!=0){
@@ -2087,261 +2112,332 @@ private void BtnGudangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
     // End of variables declaration//GEN-END:variables
 
     private void tampil() {
-        try{  
+        try {
             Valid.tabelKosong(tabMode);
-            file=new File("./cache/stokopname.iyem");
+            file = new File("./cache/stokopname.iyem");
             file.createNewFile();
             fileWriter = new FileWriter(file);
             StringBuilder iyembuilder = new StringBuilder();
-            pstampil=koneksi.prepareStatement("select databarang.kode_brng, databarang.nama_brng,jenis.nama, databarang.kode_sat, "+
-                "databarang."+hppfarmasi+" as dasar from databarang inner join jenis on databarang.kdjns=jenis.kdjns "+
-                " where databarang.status='1' "+order);
-            try {
-                rstampil=pstampil.executeQuery();
-                while(rstampil.next()){                            
-                    tabMode.addRow(new Object[]{
-                        "",rstampil.getString("kode_brng"),rstampil.getString("nama_brng"),rstampil.getString("nama"),rstampil.getString("kode_sat"),rstampil.getDouble("dasar"),0,0,0,0,0,"",""
-                    });
-                    iyembuilder.append("{\"KodeBarang\":\"").append(rstampil.getString("kode_brng")).append("\",\"NamaBarang\":\"").append(rstampil.getString("nama_brng").replaceAll("\"","")).append("\",\"Kategori\":\"").append(rstampil.getString("nama")).append("\",\"Satuan\":\"").append(rstampil.getString("kode_sat")).append("\",\"Harga\":\"").append(rstampil.getString("dasar")).append("\",\"NoBatch\":\"\",\"NoFaktur\":\"\",\"Stok\":\"0\"},");
-                }  
-            } catch (Exception e) {
-                System.out.println("Notif : "+e);
-            } finally{
-                if(rstampil!=null){
-                    rstampil.close();
-                }
-                if(pstampil!=null){
-                    pstampil.close();
-                }
-            }      
-            
-            if (iyembuilder.length() > 0) {
-                    iyembuilder.setLength(iyembuilder.length() - 1);
-                    fileWriter.write("{\"stokopname\":["+iyembuilder+"]}");
-                    fileWriter.flush();
-                }
 
-                fileWriter.close();
-                iyembuilder=null;
-        }catch(Exception e){
-            System.out.println("Notifikasi : "+e);
+            // 1. Tambahkan databarang.stokmin di query
+            pstampil = koneksi.prepareStatement("select databarang.kode_brng, databarang.nama_brng,jenis.nama, databarang.kode_sat, " +
+                    "databarang." + hppfarmasi + " as dasar, databarang.stokminimal from databarang inner join jenis on databarang.kdjns=jenis.kdjns " +
+                    " where databarang.status='1' " + order);
+            try {
+                rstampil = pstampil.executeQuery();
+                while (rstampil.next()) {
+                    // 2. Tambahkan stokmin di urutan PALING BELAKANG (setelah NoFaktur)
+                    tabMode.addRow(new Object[]{
+                        "", 
+                        rstampil.getString("kode_brng"), 
+                        rstampil.getString("nama_brng"), 
+                        rstampil.getString("nama"), 
+                        rstampil.getString("kode_sat"), 
+                        rstampil.getDouble("dasar"), 
+                        0, 0, 0, 0, 0, "", "",0
+                        //rstampil.getDouble("stokminimal") // <--- POSISI BARU DI AKHIR
+                    });
+
+                    // 3. Masukkan ke JSON
+                    iyembuilder.append("{\"KodeBarang\":\"").append(rstampil.getString("kode_brng"))
+                            .append("\",\"NamaBarang\":\"").append(rstampil.getString("nama_brng").replaceAll("\"", ""))
+                            .append("\",\"Kategori\":\"").append(rstampil.getString("nama"))
+                            .append("\",\"Satuan\":\"").append(rstampil.getString("kode_sat"))
+                            .append("\",\"Harga\":\"").append(rstampil.getString("dasar"))
+                            .append("\",\"StokMin\":\"")//.append(rstampil.getString("stokminimal")) // Simpan ke cache
+                            .append("\",\"NoBatch\":\"\",\"NoFaktur\":\"\",\"Stok\":\"0\"},");
+                }
+            } catch (Exception e) {
+                System.out.println("Notif : " + e);
+            } finally {
+                if (rstampil != null) { rstampil.close(); }
+                if (pstampil != null) { pstampil.close(); }
+            }
+
+            if (iyembuilder.length() > 0) {
+                iyembuilder.setLength(iyembuilder.length() - 1);
+                fileWriter.write("{\"stokopname\":[" + iyembuilder + "]}");
+                fileWriter.flush();
+            }
+
+            fileWriter.close();
+            iyembuilder = null;
+            
+            //hitungStok();
+            
+        } catch (Exception e) {
+            System.out.println("Notifikasi : " + e);
         }
     }
-    
+
     private void tampil2() {
-        try{  
-            jml=0;
-            for(i=0;i<tbDokter.getRowCount();i++){
-                if(!tbDokter.getValueAt(i,0).toString().equals("")){
+        try {
+            jml = 0;
+            for (i = 0; i < tbDokter.getRowCount(); i++) {
+                if (!tbDokter.getValueAt(i, 0).toString().equals("")) {
                     jml++;
                 }
             }
-            real=new String[jml];
-            kodebarang=new String[jml];
-            namabarang=new String[jml];
-            kategori=new String[jml];
-            satuan=new String[jml];
-            hargabeli=new double[jml];
-            stok=new double[jml];
-            selisih=new double[jml];
-            lebih=new double[jml];
-            nomihilang=new double[jml];
-            nomilebih=new double[jml];
-            nobatch=new String[jml];
-            nofaktur=new String[jml];
 
-            index=0;        
-            for(i=0;i<tbDokter.getRowCount();i++){
-                if(!tbDokter.getValueAt(i,0).toString().equals("")){
-                    real[index]=tbDokter.getValueAt(i,0).toString();
-                    kodebarang[index]=tbDokter.getValueAt(i,1).toString();
-                    namabarang[index]=tbDokter.getValueAt(i,2).toString();
-                    kategori[index]=tbDokter.getValueAt(i,3).toString();
-                    satuan[index]=tbDokter.getValueAt(i,4).toString();
-                    hargabeli[index]=Double.parseDouble(tbDokter.getValueAt(i,5).toString());
-                    stok[index]=Double.parseDouble(tbDokter.getValueAt(i,6).toString());
-                    selisih[index]=Double.parseDouble(tbDokter.getValueAt(i,7).toString());
-                    lebih[index]=Double.parseDouble(tbDokter.getValueAt(i,8).toString());
-                    nomihilang[index]=Double.parseDouble(tbDokter.getValueAt(i,9).toString());
-                    nomilebih[index]=Double.parseDouble(tbDokter.getValueAt(i,10).toString());
-                    nobatch[index]=tbDokter.getValueAt(i,11).toString();
-                    nofaktur[index]=tbDokter.getValueAt(i,12).toString();
+            // Inisialisasi array seperti biasa
+            real = new String[jml];
+            kodebarang = new String[jml];
+            namabarang = new String[jml];
+            kategori = new String[jml];
+            satuan = new String[jml];
+            hargabeli = new double[jml];
+            stok = new double[jml];
+            selisih = new double[jml];
+            lebih = new double[jml];
+            nomihilang = new double[jml];
+            nomilebih = new double[jml];
+            nobatch = new String[jml];
+            nofaktur = new String[jml];
+
+            // 4. Buat array baru untuk menampung stokmin
+            stokmin = new double[jml]; 
+
+            index = 0;
+            for (i = 0; i < tbDokter.getRowCount(); i++) {
+                if (!tbDokter.getValueAt(i, 0).toString().equals("")) {
+                    // Ambil data urutan LAMA (index 0 - 12 tidak berubah)
+                    real[index] = tbDokter.getValueAt(i, 0).toString();
+                    kodebarang[index] = tbDokter.getValueAt(i, 1).toString();
+                    namabarang[index] = tbDokter.getValueAt(i, 2).toString();
+                    kategori[index] = tbDokter.getValueAt(i, 3).toString();
+                    satuan[index] = tbDokter.getValueAt(i, 4).toString();
+                    hargabeli[index] = Double.parseDouble(tbDokter.getValueAt(i, 5).toString());
+                    stok[index] = Double.parseDouble(tbDokter.getValueAt(i, 6).toString());
+                    selisih[index] = Double.parseDouble(tbDokter.getValueAt(i, 7).toString());
+                    lebih[index] = Double.parseDouble(tbDokter.getValueAt(i, 8).toString());
+                    nomihilang[index] = Double.parseDouble(tbDokter.getValueAt(i, 9).toString());
+                    nomilebih[index] = Double.parseDouble(tbDokter.getValueAt(i, 10).toString());
+                    nobatch[index] = tbDokter.getValueAt(i, 11).toString();
+                    nofaktur[index] = tbDokter.getValueAt(i, 12).toString();
+
+                    // 5. Ambil data StokMin dari kolom TERAKHIR (Index 13)
+                    // Pastikan kolom di tabel sudah ditambah dulu, kalau tidak ini akan error
+                    if(tbDokter.getValueAt(i, 13)!=null && !tbDokter.getValueAt(i, 13).toString().equals("")){
+                         stokmin[index] = Double.parseDouble(tbDokter.getValueAt(i, 13).toString());
+                    } else {
+                         stokmin[index] = 0;
+                    }
+
                     index++;
                 }
             }
 
             Valid.tabelKosong(tabMode);
-            for(i=0;i<jml;i++){
+            for (i = 0; i < jml; i++) {
+                // 6. Masukkan kembali ke tabel dengan urutan stokmin di AKHIR
                 tabMode.addRow(new Object[]{
-                    real[i],kodebarang[i],namabarang[i],kategori[i],satuan[i],
-                    hargabeli[i],stok[i],selisih[i],lebih[i],nomihilang[i],nomilebih[i],
-                    nobatch[i],nofaktur[i]
+                    real[i], kodebarang[i], namabarang[i], kategori[i], satuan[i],
+                    hargabeli[i], stok[i], selisih[i], lebih[i], nomihilang[i], nomilebih[i],
+                    nobatch[i], nofaktur[i],
+                    stokmin[i] // <--- Posisi belakang
                 });
             }
-            
-            real=null;
-            kodebarang=null;
-            namabarang=null;
-            kategori=null;
-            satuan=null;
-            hargabeli=null;
-            stok=null;
-            selisih=null;
-            lebih=null;
-            nomihilang=null;
-            nomilebih=null;
-            nobatch=null;
-            nofaktur=null;
-            
+
+            // Bersihkan memory array
+            real=null; kodebarang=null; namabarang=null; kategori=null; satuan=null;
+            hargabeli=null; stok=null; selisih=null; lebih=null; nomihilang=null;
+            nomilebih=null; nobatch=null; nofaktur=null; stokmin=null;
+
             myObj = new FileReader("./cache/stokopname.iyem");
             root = mapper.readTree(myObj);
             response = root.path("stokopname");
-            if(response.isArray()){
-                if(TCari.getText().trim().equals("")){
-                    for(JsonNode list:response){
+
+            if (response.isArray()) {
+                if (TCari.getText().trim().equals("")) {
+                    for (JsonNode list : response) {
+                        // 7. Tampilkan dari cache JSON (Tanpa filter)
                         tabMode.addRow(new Object[]{
-                            "",list.path("KodeBarang").asText(),list.path("NamaBarang").asText(),list.path("Kategori").asText(),list.path("Satuan").asText(),list.path("Harga").asDouble(),list.path("Stok").asDouble(),0,0,0,0,list.path("NoBatch").asText(),list.path("NoFaktur").asText()
+                            "", list.path("KodeBarang").asText(), list.path("NamaBarang").asText(), 
+                            list.path("Kategori").asText(), list.path("Satuan").asText(), 
+                            list.path("Harga").asDouble(), list.path("Stok").asDouble(), 
+                            0, 0, 0, 0, 
+                            list.path("NoBatch").asText(), list.path("NoFaktur").asText(),
+                            list.path("StokMin").asDouble() // <--- Posisi belakang
                         });
                     }
-                }else{
-                    for(JsonNode list:response){
-                        if(list.path("KodeBarang").asText().toLowerCase().contains(TCari.getText().toLowerCase())||list.path("NamaBarang").asText().toLowerCase().contains(TCari.getText().toLowerCase())||list.path("Kategori").asText().toLowerCase().contains(TCari.getText().toLowerCase())){
+                } else {
+                    for (JsonNode list : response) {
+                        if (list.path("KodeBarang").asText().toLowerCase().contains(TCari.getText().toLowerCase()) || 
+                            list.path("NamaBarang").asText().toLowerCase().contains(TCari.getText().toLowerCase()) || 
+                            list.path("Kategori").asText().toLowerCase().contains(TCari.getText().toLowerCase())) {
+
+                            // 8. Tampilkan dari cache JSON (Dengan filter pencarian)
                             tabMode.addRow(new Object[]{
-                                "",list.path("KodeBarang").asText(),list.path("NamaBarang").asText(),list.path("Kategori").asText(),list.path("Satuan").asText(),list.path("Harga").asDouble(),list.path("Stok").asDouble(),0,0,0,0,list.path("NoBatch").asText(),list.path("NoFaktur").asText()
+                                "", list.path("KodeBarang").asText(), list.path("NamaBarang").asText(), 
+                                list.path("Kategori").asText(), list.path("Satuan").asText(), 
+                                list.path("Harga").asDouble(), list.path("Stok").asDouble(), 
+                                0, 0, 0, 0, 
+                                list.path("NoBatch").asText(), list.path("NoFaktur").asText(),
+                                list.path("StokMin").asDouble() // <--- Posisi belakang
                             });
                         }
                     }
                 }
             }
             myObj.close();
-        }catch(Exception e){
-            System.out.println("Notifikasi : "+e);
+            
+            //hitungStok();
+            
+        } catch (Exception e) {
+            System.out.println("Notifikasi : " + e);
         }
     }
     
        
-    private void getData(){
-        i=tbDokter.getSelectedRow();
-        if(nmgudang.getText().trim().equals("")){
-            for(index=0;index<tbDokter.getRowCount();index++){   
-                tbDokter.setValueAt("",index,0);        
-            }
-        }else if(i!= -1){   
-            if(!tbDokter.getValueAt(i,0).toString().equals("")){
+private void getData() {
+    i = tbDokter.getSelectedRow();
+    
+    // Validasi: Jangan jalankan jika gudang belum dipilih
+    if (nmgudang.getText().trim().equals("")) {
+        for (index = 0; index < tbDokter.getRowCount(); index++) {
+            tbDokter.setValueAt("", index, 0);
+        }
+    } else if (i != -1) {
+        // Cek apakah kolom Real (Index 0) tidak null
+        if (tbDokter.getValueAt(i, 0) != null) { 
+            try {
+                // -----------------------------------------------------------
+                // 1. KEMBALIKAN QUERY STOK GUDANG (Supaya Stok tidak 0)
+                // -----------------------------------------------------------
+                stokbarang = 0;
+                if (aktifkanbatch.equals("yes")) {
+                    psstok = koneksi.prepareStatement("select ifnull(gudangbarang.stok,'0') from gudangbarang where gudangbarang.kd_bangsal=? and gudangbarang.kode_brng=? and gudangbarang.no_batch=? and gudangbarang.no_faktur=?");
+                    try {
+                        psstok.setString(1, kdgudang.getText());
+                        psstok.setString(2, tbDokter.getValueAt(i, 1).toString());
+                        psstok.setString(3, tbDokter.getValueAt(i, 11).toString());
+                        psstok.setString(4, tbDokter.getValueAt(i, 12).toString());
+                        rsstok = psstok.executeQuery();
+                        if (rsstok.next()) {
+                            stokbarang = rsstok.getDouble(1);
+                        }
+                    } catch (Exception e) {
+                        stokbarang = 0;
+                        System.out.println("Error Query Stok Gudang: " + e);
+                    } finally {
+                        if (rsstok != null) { rsstok.close(); }
+                        if (psstok != null) { psstok.close(); }
+                    }
+                } else {
+                    psstok = koneksi.prepareStatement("select ifnull(gudangbarang.stok,'0') from gudangbarang where gudangbarang.kd_bangsal=? and gudangbarang.kode_brng=? and gudangbarang.no_batch='' and gudangbarang.no_faktur=''");
+                    try {
+                        psstok.setString(1, kdgudang.getText());
+                        psstok.setString(2, tbDokter.getValueAt(i, 1).toString());
+                        rsstok = psstok.executeQuery();
+                        if (rsstok.next()) {
+                            stokbarang = rsstok.getDouble(1);
+                        }
+                    } catch (Exception e) {
+                        stokbarang = 0;
+                        System.out.println("Error Query Stok Gudang (No Batch): " + e);
+                    } finally {
+                        if (rsstok != null) { rsstok.close(); }
+                        if (psstok != null) { psstok.close(); }
+                    }
+                }
+                
+                // UPDATE KOLOM 6 (Stok System)
+                tbDokter.setValueAt(stokbarang, i, 6);
+
+
+                // -----------------------------------------------------------
+                // 2. QUERY STOK MINIMAL (Agar Stok Min juga muncul saat diklik)
+                // -----------------------------------------------------------
                 try {
-                    if(Double.parseDouble(tabMode.getValueAt(i,0).toString())>=0){
-                        stokbarang=0;   
-                        if(aktifkanbatch.equals("yes")){
-                            psstok=koneksi.prepareStatement("select ifnull(gudangbarang.stok,'0') from gudangbarang where gudangbarang.kd_bangsal=? and gudangbarang.kode_brng=? and gudangbarang.no_batch=? and gudangbarang.no_faktur=?");
-                            try{
-                                psstok.setString(1,kdgudang.getText());
-                                psstok.setString(2,tbDokter.getValueAt(i,1).toString());
-                                psstok.setString(3,tbDokter.getValueAt(i,11).toString());
-                                psstok.setString(4,tbDokter.getValueAt(i,12).toString());
-                                rsstok=psstok.executeQuery();
-                                if(rsstok.next()){
-                                     stokbarang=rsstok.getDouble(1);
-                                }
-                            }catch (Exception e) {
-                                tbDokter.setValueAt(0,i,6);
-                            } finally{
-                                if(rsstok!=null){
-                                    rsstok.close();
-                                }
-                                if(psstok!=null){
-                                    psstok.close();
-                                }
-                            }
-                        }else{
-                            psstok=koneksi.prepareStatement("select ifnull(gudangbarang.stok,'0') from gudangbarang where gudangbarang.kd_bangsal=? and gudangbarang.kode_brng=? and gudangbarang.no_batch='' and gudangbarang.no_faktur=''");
-                            try{
-                                psstok.setString(1,kdgudang.getText());
-                                psstok.setString(2,tbDokter.getValueAt(i,1).toString());
-                                rsstok=psstok.executeQuery();
-                                if(rsstok.next()){
-                                     stokbarang=rsstok.getDouble(1);
-                                }
-                            }catch (Exception e) {
-                                tbDokter.setValueAt(0,i,6);
-                            } finally{
-                                if(rsstok!=null){
-                                    rsstok.close();
-                                }
-                                if(psstok!=null){
-                                    psstok.close();
-                                }
-                            }
+                    psstok = koneksi.prepareStatement("select stokminimal from databarang where kode_brng=?");
+                    try {
+                        psstok.setString(1, tbDokter.getValueAt(i, 1).toString());
+                        rsstok = psstok.executeQuery();
+                        if (rsstok.next()) {
+                            tbDokter.setValueAt(rsstok.getDouble(1), i, 13); // Kolom 13
+                        } else {
+                            tbDokter.setValueAt(0, i, 13);
                         }
-                            
-                        tbDokter.setValueAt(stokbarang,i,6);
-
-                        harga=Sequel.cariIsiAngka("select data_batch."+hppfarmasi+" as dasar from data_batch where data_batch.kode_brng='"+tbDokter.getValueAt(i,1).toString()+"' and no_batch='"+tbDokter.getValueAt(i,11).toString()+"' and no_faktur='"+tbDokter.getValueAt(i,12).toString()+"'");
-                        if(harga>0){
-                            tbDokter.setValueAt(harga,i,5);
-                        }
-
-                        try {
-                            kurang=Double.parseDouble(tbDokter.getValueAt(i,6).toString())-Double.parseDouble(tbDokter.getValueAt(i,0).toString());
-                        } catch (Exception e) {
-                            kurang=0;
-                        }
-
-                        if(kurang>0){
-                            tbDokter.setValueAt(kurang,i,7); 
-                            tbDokter.setValueAt(0,i,8); 
-                        }else{
-                            tbDokter.setValueAt(0,i,7);  
-                            tbDokter.setValueAt((kurang*-1),i,8); 
-                        }
-
-                        if(kurang>0){
-                             tbDokter.setValueAt(kurang*Double.parseDouble(tbDokter.getValueAt(i,5).toString()),i,9);     
-                             tbDokter.setValueAt(0,i,10); 
-                        }else{                       
-                             tbDokter.setValueAt(0,i,9);  
-                             tbDokter.setValueAt(-1*kurang*Double.parseDouble(tbDokter.getValueAt(i,5).toString()),i,10);  
-                        }
+                    } catch (Exception e) {
+                        tbDokter.setValueAt(0, i, 13);
+                    } finally {
+                        if (rsstok != null) { rsstok.close(); }
+                        if (psstok != null) { psstok.close(); }
                     }
                 } catch (Exception e) {
-                    tbDokter.setValueAt(0,i,6);  
-                    tbDokter.setValueAt(0,i,7);  
-                    tbDokter.setValueAt(0,i,8); 
-                    tbDokter.setValueAt(0,i,9); 
-                    tbDokter.setValueAt(0,i,10); 
-                    tbDokter.setValueAt("",i,0); 
+                    // ignore
                 }
-            }else{
-                tbDokter.setValueAt(0,i,6);  
-                tbDokter.setValueAt(0,i,7);  
-                tbDokter.setValueAt(0,i,8); 
-                tbDokter.setValueAt(0,i,9); 
-                tbDokter.setValueAt(0,i,10); 
-            }
 
-            
-            ttl=0;
-            ttl2=0;
-            for(i=0;i<tbDokter.getRowCount();i++){ 
-                y=0;
-                try {
-                    y=Double.parseDouble(tbDokter.getValueAt(i,9).toString());
-                } catch (Exception e) {
-                    y=0;           
+
+                // -----------------------------------------------------------
+                // 3. HITUNG HARGA & SELISIH (Logika Asli)
+                // -----------------------------------------------------------
+                harga = Sequel.cariIsiAngka("select data_batch." + hppfarmasi + " as dasar from data_batch where data_batch.kode_brng='" + tbDokter.getValueAt(i, 1).toString() + "' and no_batch='" + tbDokter.getValueAt(i, 11).toString() + "' and no_faktur='" + tbDokter.getValueAt(i, 12).toString() + "'");
+                if (harga > 0) {
+                    tbDokter.setValueAt(harga, i, 5);
                 }
-                ttl=ttl+y;
-                
-                y2=0;
+
+                // Ambil nilai "Real" (Kolom 0). Jika kosong/error, anggap 0.
+                double nilaiReal = 0;
                 try {
-                    y2=Double.parseDouble(tbDokter.getValueAt(i,10).toString());
-                } catch (Exception e) {
-                    y2=0;           
+                    if(tbDokter.getValueAt(i, 0).toString().equals("")) {
+                        nilaiReal = 0;
+                    } else {
+                        nilaiReal = Double.parseDouble(tbDokter.getValueAt(i, 0).toString());
+                    }
+                } catch(Exception e) {
+                    nilaiReal = 0;
                 }
-                ttl2=ttl2+y2;
+
+                // Rumus Selisih: (Stok System - Stok Real)
+                kurang = stokbarang - nilaiReal;
+
+                if (kurang > 0) {
+                    tbDokter.setValueAt(kurang, i, 7);
+                    tbDokter.setValueAt(0, i, 8);
+                } else {
+                    tbDokter.setValueAt(0, i, 7);
+                    tbDokter.setValueAt((kurang * -1), i, 8);
+                }
+
+                if (kurang > 0) {
+                    tbDokter.setValueAt(kurang * harga, i, 9);
+                    tbDokter.setValueAt(0, i, 10);
+                } else {
+                    tbDokter.setValueAt(0, i, 9);
+                    tbDokter.setValueAt(-1 * kurang * harga, i, 10);
+                }
+
+            } catch (Exception e) {
+                System.out.println("Error Utama getData: " + e);
+                // Jika error parah, reset nilai agar aman
+                tbDokter.setValueAt(0, i, 6);
+                tbDokter.setValueAt(0, i, 13);
             }
-            LTotal.setText(Valid.SetAngka(ttl));
-            LTotal1.setText(Valid.SetAngka(ttl2));
         }
+        
+        // -----------------------------------------------------------
+        // 4. HITUNG TOTAL NOMINAL
+        // -----------------------------------------------------------
+        ttl = 0;
+        ttl2 = 0;
+        for (i = 0; i < tbDokter.getRowCount(); i++) {
+            y = 0;
+            try {
+                y = Double.parseDouble(tbDokter.getValueAt(i, 9).toString());
+            } catch (Exception e) { y = 0; }
+            ttl = ttl + y;
+
+            y2 = 0;
+            try {
+                y2 = Double.parseDouble(tbDokter.getValueAt(i, 10).toString());
+            } catch (Exception e) { y2 = 0; }
+            ttl2 = ttl2 + y2;
+        }
+        LTotal.setText(Valid.SetAngka(ttl));
+        LTotal1.setText(Valid.SetAngka(ttl2));
     }
+}
          
     public void isCek(){
          BtnSimpan.setEnabled(akses.getstok_opname_obat());   
