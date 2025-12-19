@@ -3329,6 +3329,85 @@ public final class RMDataResumePasienRanap extends javax.swing.JDialog {
         }
         LCount.setText(""+tabMode.getRowCount());
     }
+    
+public void setDataDariSOAP(
+        String keluhanSOAP,
+        String pemeriksaanSOAP,
+        String asesmenSOAP,
+        String planSOAP,
+        String evaluasiSOAP,
+        String intstuksiSOAP,
+        String hasilLab,
+        String hasilRad,
+        String hasilTindakan
+) {
+    // 1. Keluhan -> Masuk ke KeluhanUtama
+    KeluhanUtama.setText(keluhanSOAP);
+
+    PemeriksaanFisik.setText(pemeriksaanSOAP);
+
+    if(!hasilLab.equals("-")){
+        HasilLaborat.setText(hasilLab);
+    }
+
+    if(!hasilRad.equals("-")){
+        PemeriksaanRad.setText(hasilRad);
+    }
+
+   // 5. DIAGNOSA (LOGIKA: PECAH BARIS + GABUNG SISA)
+    // -----------------------------------------------------------
+    if (!asesmenSOAP.trim().equals("")) {
+        String[] listDiagnosa = asesmenSOAP.split("\\r?\\n");
+        
+        // 1. Diagnosa Utama (Baris 1)
+        if (DiagnosaUtama.getText().trim().equals("")) {
+            if (listDiagnosa.length > 0) DiagnosaUtama.setText(listDiagnosa[0].trim());
+        }
+
+        // 2. Sekunder 1 (Baris 2)
+        if (DiagnosaSekunder1.getText().trim().equals("")) {
+            if (listDiagnosa.length > 1) DiagnosaSekunder1.setText(listDiagnosa[1].trim());
+        }
+        
+        // 3. Sekunder 2 (Baris 3)
+        if (DiagnosaSekunder2.getText().trim().equals("")) {
+            if (listDiagnosa.length > 2) DiagnosaSekunder2.setText(listDiagnosa[2].trim());
+        }
+        
+        // 4. Sekunder 3 (Baris 4)
+        if (DiagnosaSekunder3.getText().trim().equals("")) {
+            if (listDiagnosa.length > 3) DiagnosaSekunder3.setText(listDiagnosa[3].trim());
+        }
+
+        // 5. Sekunder 4 (Baris 5 DAN SISANYA)
+        // Logika: Ambil baris ke-5 sampai habis, gabung jadi satu string
+        if (DiagnosaSekunder4.getText().trim().equals("")) {
+            if (listDiagnosa.length > 4) { 
+                StringBuilder sisaDiagnosa = new StringBuilder();
+                
+                // Ambil baris ke-5 (index 4)
+                sisaDiagnosa.append(listDiagnosa[4].trim());
+                
+                // Jika ternyata ada baris ke-6, 7, dst.. sambung pakai koma
+                for (int i = 5; i < listDiagnosa.length; i++) {
+                    if(!listDiagnosa[i].trim().equals("")){
+                        sisaDiagnosa.append(", ").append(listDiagnosa[i].trim());
+                    }
+                }
+                
+                DiagnosaSekunder4.setText(sisaDiagnosa.toString());
+            }
+        }
+    }
+    
+    Edukasi.setText(intstuksiSOAP);
+     
+    String gabunganTerapi = (planSOAP + "\n" + evaluasiSOAP).trim();
+    ObatPulang.setText(gabunganTerapi);
+    
+    TindakanSelamaDiRS.setText(hasilTindakan);
+
+}
 
     public void emptTeks() {
         Alasan.setText("");
@@ -3370,7 +3449,7 @@ public final class RMDataResumePasienRanap extends javax.swing.JDialog {
         DIlanjutkan.setSelectedIndex(0);
         Kontrol.setDate(new Date());
         DiagnosaAwal.requestFocus();
-    } 
+    }    
 
     private void getData() {
         if(tbObat.getSelectedRow()!= -1){

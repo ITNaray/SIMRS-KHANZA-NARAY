@@ -2258,12 +2258,46 @@ public final class RMDataResumePasien extends javax.swing.JDialog {
 
         // 5. AsesmenSOAP -> bantu isi DiagnosaUtama kalau masih kosong
         if (!asesmenSOAP.trim().equals("")) {
+            String[] listDiagnosa = asesmenSOAP.split("\\r?\\n");
+
+            // 1. Diagnosa Utama (Baris 1)
             if (DiagnosaUtama.getText().trim().equals("")) {
-                DiagnosaUtama.setText(asesmenSOAP);
-            } else {
-                DiagnosaUtama.setText(
-                    DiagnosaUtama.getText()
-                );
+                if (listDiagnosa.length > 0) DiagnosaUtama.setText(listDiagnosa[0].trim());
+            }
+
+            // 2. Sekunder 1 (Baris 2)
+            if (DiagnosaSekunder1.getText().trim().equals("")) {
+                if (listDiagnosa.length > 1) DiagnosaSekunder1.setText(listDiagnosa[1].trim());
+            }
+
+            // 3. Sekunder 2 (Baris 3)
+            if (DiagnosaSekunder2.getText().trim().equals("")) {
+                if (listDiagnosa.length > 2) DiagnosaSekunder2.setText(listDiagnosa[2].trim());
+            }
+
+            // 4. Sekunder 3 (Baris 4)
+            if (DiagnosaSekunder3.getText().trim().equals("")) {
+                if (listDiagnosa.length > 3) DiagnosaSekunder3.setText(listDiagnosa[3].trim());
+            }
+
+            // 5. Sekunder 4 (Baris 5 DAN SISANYA)
+            // Logika: Ambil baris ke-5 sampai habis, gabung jadi satu string
+            if (DiagnosaSekunder4.getText().trim().equals("")) {
+                if (listDiagnosa.length > 4) { 
+                    StringBuilder sisaDiagnosa = new StringBuilder();
+
+                    // Ambil baris ke-5 (index 4)
+                    sisaDiagnosa.append(listDiagnosa[4].trim());
+
+                    // Jika ternyata ada baris ke-6, 7, dst.. sambung pakai koma
+                    for (int i = 5; i < listDiagnosa.length; i++) {
+                        if(!listDiagnosa[i].trim().equals("")){
+                            sisaDiagnosa.append(", ").append(listDiagnosa[i].trim());
+                        }
+                    }
+
+                    DiagnosaSekunder4.setText(sisaDiagnosa.toString());
+                }
             }
         }
     }

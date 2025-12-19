@@ -46,6 +46,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import java.awt.Frame;
@@ -6916,33 +6918,252 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
         Valid.pindah2(evt,TPenilaian,TInstruksi);
     }//GEN-LAST:event_TindakLanjutKeyPressed
 
-    private void BtnResumeActionPerformed(java.awt.event.ActionEvent evt) {
+    private void BtnResumeActionPerformed(java.awt.event.ActionEvent evt) {                                          
+    // 1. Validasi No.Rawat
     if(TNoRw.getText().trim().equals("")){
-        JOptionPane.showMessageDialog(null,"Maaf, Silahkan anda pilih dulu dengan mengklik data pada table...!!!");
+        JOptionPane.showMessageDialog(null,"Maaf, Silahkan anda pilih dulu dengan menklik data pada table...!!!");
         TCari.requestFocus();
-    }else{ 
-        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        RMDataResumePasienRanap resume=new RMDataResumePasienRanap(null,false);
-        resume.isCek();
-        resume.setSize(internalFrame1.getWidth()-20,internalFrame1.getHeight()-20);
-        resume.setLocationRelativeTo(internalFrame1);
-        resume.setNoRm(TNoRw.getText(),DTPCari2.getDate());
-        resume.tampil();
-        resume.setVisible(true);
-        this.setCursor(Cursor.getDefaultCursor());
-
-        // update UI setelah ditutup
-        resume.addWindowListener(new java.awt.event.WindowAdapter() {
-            @Override
-            public void windowClosed(java.awt.event.WindowEvent e) {
-                updateResumeRanapUI();
-            }
-            @Override
-            public void windowClosing(java.awt.event.WindowEvent e) {
-                updateResumeRanapUI();
-            }
-        });
+        return;
     }
+
+    String norawat = TNoRw.getText().trim();
+
+    // 2. Cek apakah resume RANAP sudah ada di database
+    int jml = Sequel.cariInteger(
+        "SELECT COUNT(*) FROM resume_pasien_ranap WHERE no_rawat=?", 
+        norawat
+    );
+
+    this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+    // 3. Siapkan form resume RANAP
+    RMDataResumePasienRanap resume = new RMDataResumePasienRanap(null,false);
+    resume.isCek();
+    resume.setSize(internalFrame1.getWidth()-20,internalFrame1.getHeight()-20);
+    resume.setLocationRelativeTo(internalFrame1);
+    resume.setNoRm(TNoRw.getText(), DTPCari2.getDate());
+
+    if(jml == 0){
+        // --- LOGIKA BARU UNTUK ISI OTOMATIS ---
+
+        // Validasi: Harus pilih baris SOAP di tabel dulu
+        if(tbPemeriksaan.getSelectedRow() == -1){
+            this.setCursor(Cursor.getDefaultCursor());
+            JOptionPane.showMessageDialog(null, 
+                "Maaf, silahkan pilih dulu baris SOAP/CPPT yang akan dijadikan resume...!!!");
+            tbPemeriksaan.requestFocus();
+            return;
+        }
+
+        // Pindahkan data dari Tabel ke Textfield (fungsi bawaan Khanza)
+        getDataPemeriksaan();  
+        
+        // Ambil isi SOAP dari Textfield yang sudah terisi
+        String keluhan   = TKeluhan.getText();                  
+        String obj       = TPemeriksaan.getText();              
+        String asesmen   = TPenilaian.getText();                
+        String plan      = TindakLanjut.getText();
+        String instuksi = TInstruksi.getText();
+        String evaluasi  = TEvaluasi.getText();                 
+        
+        String dataLab = getHasilLab(norawat);
+        String dataRad = getHasilRad(norawat);
+        String dataTindakan = getTindakan(norawat);
+
+  
+        resume.tampil();
+        
+ 
+        resume.setDataDariSOAP(keluhan, obj, asesmen, plan,instuksi,evaluasi,dataLab, dataRad, dataTindakan);
+
+    } else {
+        // Jika sudah ada, langsung tampilkan saja
+        resume.tampil();
+    }
+
+    // 4. Update UI tombol setelah form ditutup
+    resume.addWindowListener(new java.awt.event.WindowAdapter() {
+        @Override
+        public void windowClosed(java.awt.event.WindowEvent e) {
+            updateResumeRanapUI();
+        }
+        @Override
+        public void windowClosing(java.awt.event.WindowEvent e) {
+            updateResumeRanapUI();
+        }
+    });
+
+    resume.setVisible(true);
+    this.setCursor(Cursor.getDefaultCursor());
+}
+    // --- 1. Fungsi Tarik Hasil Lab ---
+    private String getHasilRad(String noRawat) {
+    // Default kita isi "-" agar jika error/kosong, tetap muncul strip
+    String hasil = "-"; 
+    
+    // Gunakan try-catch agar jika query gagal, program tidak berhenti
+    try {
+        // Cek dulu apakah tabel/kolomnya benar via try
+        PreparedStatement psRad = koneksi.prepareStatement(
+            "select hasil from hasil_radiologi where no_rawat=?");
+            try {
+                psRad.setString(1, noRawat);
+                ResultSet rsRad = psRad.executeQuery();
+
+                StringBuilder sb = new StringBuilder();
+                boolean adaData = false;
+
+                while (rsRad.next()) {
+                    adaData = true;
+                    // Cek null agar tidak error jika kolom isinya NULL
+                    String isi = rsRad.getString("hasil");
+                    if(isi != null && !isi.equals("")){
+                        sb.append(isi).append("\n");
+                    }
+                }
+
+                if(adaData && sb.length() > 0){
+                    hasil = sb.toString().trim();
+                }
+
+            } catch (Exception e) {
+                // Jika error (misal kolom tidak ketemu), diam saja & biarkan hasil tetap "-"
+                System.out.println("Notifikasi Error Rad: " + e);
+            } finally {
+                if(psRad != null) psRad.close();
+            }
+        } catch (Exception e) {
+            System.out.println("Error Koneksi Rad: " + e);
+        }
+        return hasil;
+    }
+
+    // --- 2. Fungsi Tarik Hasil Radiologi ---
+    private String getHasilLab(String noRawat) {
+    String hasil = "-"; // Default strip
+    try {
+        PreparedStatement psLab = koneksi.prepareStatement(
+            "select template_laboratorium.Pemeriksaan, detail_periksa_lab.nilai, template_laboratorium.satuan " +
+            "from detail_periksa_lab inner join template_laboratorium " +
+            "on detail_periksa_lab.id_template=template_laboratorium.id_template " +
+            "where detail_periksa_lab.no_rawat=? order by template_laboratorium.urut");
+        try {
+            psLab.setString(1, noRawat);
+            ResultSet rsLab = psLab.executeQuery();
+            StringBuilder sb = new StringBuilder();
+            boolean adaData = false;
+            
+            while (rsLab.next()) {
+                adaData = true;
+                sb.append(rsLab.getString("Pemeriksaan")).append(": ")
+                  .append(rsLab.getString("nilai")).append(" ")
+                  .append(rsLab.getString("satuan")).append(", ");
+            }
+            
+            if(adaData && sb.length() > 2){
+                String temp = sb.toString();
+                hasil = temp.substring(0, temp.length() - 2);
+            }
+            
+        } catch (Exception e) {
+            System.out.println("Notifikasi Error Lab: " + e);
+        } finally {
+            if(psLab != null) psLab.close();
+        }
+    } catch (Exception e) {
+        System.out.println("Error Koneksi Lab: " + e);
+    }
+    return hasil;
+}
+    
+   private String getTindakan(String noRawat) {
+    // Kita pakai LinkedHashMap supaya urutannya tetap terjaga (sesuai urutan masuk)
+    // Key = Nama Tindakan, Value = Jumlahnya
+    java.util.Map<String, Integer> listTindakan = new java.util.LinkedHashMap<>();
+
+    // Query UNION ALL (Tetap sama seperti sebelumnya)
+    String sql = 
+        // 1. Ralan Dokter
+        "select jns_perawatan.nm_perawatan from rawat_jl_dr " +
+        "inner join jns_perawatan on rawat_jl_dr.kd_jenis_prw=jns_perawatan.kd_jenis_prw " +
+        "where rawat_jl_dr.no_rawat=? " +
+        "UNION ALL " +
+        // 2. Ralan Perawat
+        "select jns_perawatan.nm_perawatan from rawat_jl_pr " +
+        "inner join jns_perawatan on rawat_jl_pr.kd_jenis_prw=jns_perawatan.kd_jenis_prw " +
+        "where rawat_jl_pr.no_rawat=? " +
+        "UNION ALL " +
+        // 3. Ranap Dokter
+        "select jns_perawatan.nm_perawatan from rawat_inap_dr " +
+        "inner join jns_perawatan on rawat_inap_dr.kd_jenis_prw=jns_perawatan.kd_jenis_prw " +
+        "where rawat_inap_dr.no_rawat=? " +
+        "UNION ALL " +
+        // 4. Ranap Perawat
+        "select jns_perawatan.nm_perawatan from rawat_inap_pr " +
+        "inner join jns_perawatan on rawat_inap_pr.kd_jenis_prw=jns_perawatan.kd_jenis_prw " +
+        "where rawat_inap_pr.no_rawat=? " +
+        "UNION ALL " +
+        // 5. OPERASI
+        "select paket_operasi.nm_perawatan from operasi " +
+        "inner join paket_operasi on operasi.kode_paket=paket_operasi.kode_paket " +
+        "where operasi.no_rawat=?";
+
+    try {
+        PreparedStatement ps = koneksi.prepareStatement(sql);
+        ps.setString(1, noRawat);
+        ps.setString(2, noRawat);
+        ps.setString(3, noRawat);
+        ps.setString(4, noRawat);
+        ps.setString(5, noRawat);
+        
+        ResultSet rs = ps.executeQuery();
+        
+        // --- LOGIKA HITUNG JUMLAH ---
+        while(rs.next()) {
+            String nama = rs.getString("nm_perawatan");
+            if(nama != null && !nama.equals("")){
+                // Cek apakah tindakan ini sudah ada di daftar?
+                if(listTindakan.containsKey(nama)){
+                    // Kalau sudah ada, tambahkan jumlahnya (+1)
+                    int jumlahLama = listTindakan.get(nama);
+                    listTindakan.put(nama, jumlahLama + 1);
+                } else {
+                    // Kalau belum ada, masukkan dengan jumlah 1
+                    listTindakan.put(nama, 1);
+                }
+            }
+        }
+    } catch (Exception e) {
+        System.out.println("Error Get Tindakan: " + e);
+    }
+    
+    // --- SUSUN JADI KALIMAT ---
+    StringBuilder sb = new StringBuilder();
+    
+    // Loop isi Map tadi
+    for (java.util.Map.Entry<String, Integer> entry : listTindakan.entrySet()) {
+        String tindakan = entry.getKey();
+        int jumlah = entry.getValue();
+        
+        sb.append(tindakan);
+        
+        // Jika jumlah lebih dari 1, tambahkan keterangan angka, misal: (3)
+        if(jumlah > 1){
+            sb.append(" (").append(jumlah).append(")");
+        }
+        
+        // Tambahkan koma pemisah
+        sb.append(", ");
+    }
+    
+    // Rapikan koma terakhir
+    if (sb.length() > 2) {
+        sb.setLength(sb.length() - 2);
+    } else if (sb.length() == 0) {
+        return "-";
+    }
+    
+    return sb.toString();
 }
  
     private void updateResumeRanapUI() {
