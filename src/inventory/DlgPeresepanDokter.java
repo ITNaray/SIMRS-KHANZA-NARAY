@@ -391,6 +391,8 @@ public final class DlgPeresepanDokter extends javax.swing.JDialog {
         jLabel26 = new widget.Label();
         jPanel1 = new javax.swing.JPanel();
         LTotal = new widget.Label();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        TPlanInstruksi = new javax.swing.JTextArea();
         TabRawat = new javax.swing.JTabbedPane();
         Scroll = new widget.ScrollPane();
         tbResep = new widget.Table();
@@ -828,6 +830,19 @@ public final class DlgPeresepanDokter extends javax.swing.JDialog {
         LTotal.setBounds(780, 30, 190, 40);
 
         internalFrame1.add(FormInput, java.awt.BorderLayout.PAGE_START);
+
+        jScrollPane2.setName("jScrollPane2"); // NOI18N
+
+        TPlanInstruksi.setEditable(false);
+        TPlanInstruksi.setBackground(new java.awt.Color(255, 255, 255));
+        TPlanInstruksi.setColumns(30);
+        TPlanInstruksi.setLineWrap(true);
+        TPlanInstruksi.setRows(5);
+        TPlanInstruksi.setWrapStyleWord(true);
+        TPlanInstruksi.setName("TPlanInstruksi"); // NOI18N
+        jScrollPane2.setViewportView(TPlanInstruksi);
+
+        internalFrame1.add(jScrollPane2, java.awt.BorderLayout.LINE_END);
 
         TabRawat.setBackground(new java.awt.Color(255, 255, 253));
         TabRawat.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(241, 246, 236)));
@@ -1602,6 +1617,7 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     private widget.TextBox TCari;
     private widget.TextBox TNoRw;
     private widget.TextBox TPasien;
+    private javax.swing.JTextArea TPlanInstruksi;
     private javax.swing.JTabbedPane TabRawat;
     private widget.Button btnDokter;
     private widget.ComboBox cmbDtk;
@@ -1618,6 +1634,8 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     private widget.Label jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private widget.Label label12;
     private widget.Label label9;
     private widget.panelisi panelisi3;
@@ -2160,6 +2178,19 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         };
         // Timer
         new Timer(1000, taskPerformer).start();
+    }
+    
+
+    public void setInstruksiTampil(String teks, boolean sudahPilih) {
+       TPlanInstruksi.setText(teks); 
+       TPlanInstruksi.setCaretPosition(0);
+        if(sudahPilih) {
+            TPlanInstruksi.setForeground(new java.awt.Color(50, 50, 50)); 
+            TPlanInstruksi.setFont(new java.awt.Font("Tahoma", 0, 12)); // Font normal
+        } else {
+            TPlanInstruksi.setForeground(java.awt.Color.RED);
+            TPlanInstruksi.setFont(new java.awt.Font("Tahoma", 1, 12)); // Font tebal
+        }
     }
     
     public void tampildetailracikanresep() {   

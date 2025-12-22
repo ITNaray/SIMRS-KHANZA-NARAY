@@ -6688,24 +6688,67 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
     }//GEN-LAST:event_ChkAccorActionPerformed
 
     private void BtnResepObatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnResepObatActionPerformed
-        if(TNoRw.getText().trim().equals("")){
-            JOptionPane.showMessageDialog(null,"Maaf, Silahkan anda pilih dulu dengan menklik data pada table...!!!");
-            TCari.requestFocus();
-        }else{            
-            if(Sequel.cariRegistrasi(TNoRw.getText())>0){
-                JOptionPane.showMessageDialog(rootPane,"Data billing sudah terverifikasi ..!!");
-            }else{
-                DlgPeresepanDokter resep=new DlgPeresepanDokter(null,false);
-                resep.setSize(internalFrame1.getWidth(),internalFrame1.getHeight());
-                resep.setLocationRelativeTo(internalFrame1);
-                resep.setNoRm(TNoRw.getText(),DTPTgl.getDate(),cmbJam.getSelectedItem().toString(),cmbMnt.getSelectedItem().toString(),
-                        cmbDtk.getSelectedItem().toString(),KdDok.getText(),TDokter.getText(),"ranap");
-                resep.isCek();
-                resep.tampilobat();
-                resep.setVisible(true);
+    // 1. Validasi No Rawat (Standard Khanza)
+    if(TNoRw.getText().trim().equals("")){
+        JOptionPane.showMessageDialog(null,"Maaf, Silahkan anda pilih dulu dengan menklik data pada table...!!!");
+        TCari.requestFocus();
+    }else{            
+        // 2. Validasi Billing (Standard Khanza)
+        if(Sequel.cariRegistrasi(TNoRw.getText())>0){
+            JOptionPane.showMessageDialog(rootPane,"Data billing sudah terverifikasi ..!!");
+        }else{
+            // 3. Persiapan Form Resep
+            DlgPeresepanDokter resep = new DlgPeresepanDokter(null,false);
+            resep.setSize(internalFrame1.getWidth(),internalFrame1.getHeight());
+            resep.setLocationRelativeTo(internalFrame1);
+            
+            // Set Parameter (Perhatikan statusnya "ranap")
+            resep.setNoRm(TNoRw.getText(),DTPTgl.getDate(),
+                    cmbJam.getSelectedItem().toString(),
+                    cmbMnt.getSelectedItem().toString(),
+                    cmbDtk.getSelectedItem().toString(),
+                    KdDok.getText(),TDokter.getText(),"ranap");
+
+            // ====================================================================
+            // LOGIKA CONTEKAN CPPT (Sama dengan Ralan)
+            // ====================================================================
+            StringBuilder pesanGabungan = new StringBuilder();
+            boolean adaPilihan = false;
+
+            // Cek apakah ada baris CPPT yang dipilih di tabel Ranap?
+            if (tbPemeriksaan.getSelectedRow() != -1) {
+                adaPilihan = true;
+                try {
+                    // PENTING: Pastikan Urutan Kolom di Tabel Ranap SAMA dengan Ralan
+                    // Kolom 19 = Plan/Tindak Lanjut, Kolom 21 = Instruksi
+                    String plan = tbPemeriksaan.getValueAt(tbPemeriksaan.getSelectedRow(), 19).toString();
+                    String instruksi = tbPemeriksaan.getValueAt(tbPemeriksaan.getSelectedRow(), 20).toString();
+                    
+                    pesanGabungan.append("--- [PLANNING / TINDAK LANJUT] ---\n");
+                    pesanGabungan.append(plan.trim().equals("") ? "-" : plan).append("\n\n");
+                    
+                    pesanGabungan.append("--- [INSTRUKSI MEDIS] ---\n");
+                    pesanGabungan.append(instruksi.trim().equals("") ? "-" : instruksi);
+                    
+                } catch (Exception e) {
+                    pesanGabungan.append("- Gagal mengambil data (Cek indeks kolom tabel) -");
+                }
+            } else {
+                // Jika tidak memilih baris
+                pesanGabungan.append(":: Klik salah satu Riwayat CPPT di tabel belakang\n");
+                pesanGabungan.append("   untuk melihat PLAN dan INSTRUKSI Dokter di sini ::");
             }
+
+            // Kirim ke DlgPeresepanDokter
+            resep.setInstruksiTampil(pesanGabungan.toString(), adaPilihan);
+            // ====================================================================
+
+            resep.isCek();
+            resep.tampilobat();
+            resep.setVisible(true);
         }
-    }//GEN-LAST:event_BtnResepObatActionPerformed
+    }
+}//GEN-LAST:event_BtnResepObatActionPerformed
 
     private void BtnCopyResepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnCopyResepActionPerformed
         if(TNoRw.getText().trim().equals("")){

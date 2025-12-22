@@ -3400,9 +3400,9 @@ public void setDataDariSOAP(
         }
     }
     
-    Edukasi.setText(intstuksiSOAP);
+    Edukasi.setText(evaluasiSOAP);
      
-    String gabunganTerapi = (planSOAP + "\n" + evaluasiSOAP).trim();
+    String gabunganTerapi = (planSOAP + "\n" + intstuksiSOAP).trim();
     ObatPulang.setText(gabunganTerapi);
     
     TindakanSelamaDiRS.setText(hasilTindakan);

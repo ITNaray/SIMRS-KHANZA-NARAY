@@ -13597,16 +13597,59 @@ private void setLaporanOperasiUI() {
         dlgobt.setVisible(true);
     }
 
-    private void inputResep() {
-        DlgPeresepanDokter resep=new DlgPeresepanDokter(null,false);
-        resep.setSize(internalFrame1.getWidth(),internalFrame1.getHeight());
-        resep.setLocationRelativeTo(internalFrame1);
-        resep.setNoRm(TNoRw.getText(),DTPTgl.getDate(),cmbJam.getSelectedItem().toString(),cmbMnt.getSelectedItem().toString(),
-                cmbDtk.getSelectedItem().toString(),KdDok.getText(),TDokter.getText(),"ralan");
-        resep.isCek();
-        resep.tampilobat();
-        resep.setVisible(true);
+   private void inputResep() {
+    DlgPeresepanDokter resep = new DlgPeresepanDokter(null, false);
+    resep.setSize(internalFrame1.getWidth(), internalFrame1.getHeight());
+    resep.setLocationRelativeTo(internalFrame1);
+    
+    // Parameter standar (JANGAN DIUBAH)
+    resep.setNoRm(TNoRw.getText(), DTPTgl.getDate(), 
+            cmbJam.getSelectedItem().toString(), 
+            cmbMnt.getSelectedItem().toString(),
+            cmbDtk.getSelectedItem().toString(), 
+            KdDok.getText(), TDokter.getText(), "ralan");
+
+    // ========================================================================
+    // LOGIKA CONTEKAN: GABUNGKAN PLAN (Col 19) & INSTRUKSI (Col 21)
+    // ========================================================================
+    StringBuilder pesanGabungan = new StringBuilder();
+    boolean adaPilihan = false;
+
+    // 1. Cek apakah ada baris yang dipilih?
+    if (tbPemeriksaan.getSelectedRow() != -1) {
+        adaPilihan = true;
+        try {
+            // Ambil PLAN (Kolom 19)
+            String plan = tbPemeriksaan.getValueAt(tbPemeriksaan.getSelectedRow(), 19).toString();
+            // Ambil INSTRUKSI (Kolom 21)
+            String instruksi = tbPemeriksaan.getValueAt(tbPemeriksaan.getSelectedRow(), 21).toString();
+            
+            // Format Tampilannya
+            pesanGabungan.append("--- [PLANNING / TINDAK LANJUT] ---\n");
+            pesanGabungan.append(plan.trim().equals("") ? "-" : plan).append("\n\n");
+            
+            pesanGabungan.append("--- [INSTRUKSI MEDIS] ---\n");
+            pesanGabungan.append(instruksi.trim().equals("") ? "-" : instruksi);
+            
+        } catch (Exception e) {
+            pesanGabungan.append("- Gagal mengambil data -");
+        }
+    } else {
+        // Jika TIDAK ADA pilihan
+        pesanGabungan.append(":: Klik salah satu Riwayat CPPT di tabel belakang\n");
+        pesanGabungan.append("   untuk melihat PLAN dan INSTRUKSI Dokter di sini ::");
     }
+
+    // 2. Kirim ke DlgPeresepanDokter
+    // Kita kirim 2 parameter: Teks-nya, dan Status (apakah hasil klik atau bukan)
+    // Tujuannya agar di sana bisa diwarnai merah kalau belum klik.
+    resep.setInstruksiTampil(pesanGabungan.toString(), adaPilihan);
+    // ========================================================================
+
+    resep.isCek();
+    resep.tampilobat();
+    resep.setVisible(true);
+}
 
     private void inputKamar() {
         this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));

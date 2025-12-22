@@ -3682,23 +3682,58 @@ private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
 
     private void BtnSimpanUbahLamaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnSimpanUbahLamaActionPerformed
         if(norawatubahlama.getText().trim().equals("")||(tbUbahLama.getRowCount()<=0)){
-            Valid.textKosong(norawatubahlama,"Data");
-        }else{
-            z=tbUbahLama.getRowCount();
-            for(r=0;r<z;r++){
-                if(Valid.SetAngka(tbUbahLama.getValueAt(r,6).toString())>-1){                    
-                    Sequel.mengedit("kamar_inap","no_rawat='"+norawatubahlama.getText()+"' and kd_kamar='"+tbUbahLama.getValueAt(r,0)+"'",
-                           "tgl_keluar='"+tbUbahLama.getValueAt(r,4).toString()+"',jam_keluar='"+tbUbahLama.getValueAt(r,5).toString()+"',"+
-                           "tgl_masuk='"+tbUbahLama.getValueAt(r,2).toString()+"',jam_masuk='"+tbUbahLama.getValueAt(r,3).toString()+"',"+
-                           "lama='"+tbUbahLama.getValueAt(r,6).toString()+"',"+
-                           "ttl_biaya="+tbUbahLama.getValueAt(r,6).toString()+"*trf_kamar");                       
+                Valid.textKosong(norawatubahlama,"Data");
+            }else{
+                try {
+                    // 1. Siapkan query untuk mengambil data kondisi terakhir di database
+                    PreparedStatement psAmbilData = koneksi.prepareStatement(
+                        "SELECT tgl_keluar, jam_keluar, stts_pulang FROM kamar_inap " +
+                        "WHERE no_rawat=? AND kd_kamar=? AND tgl_masuk=? AND jam_masuk=?"
+                    );
+
+                    z = tbUbahLama.getRowCount();
+                    for(r=0; r<z; r++){
+                        // Validasi: Pastikan input lama inap adalah angka yang benar
+                        if(Valid.SetAngka(tbUbahLama.getValueAt(r,6).toString()) > -1){                    
+
+                            String tglKeluarDB = "0000-00-00";
+                            String jamKeluarDB = "00:00:00";
+                            String statusDB    = "-";
+                            psAmbilData.setString(1, norawatubahlama.getText());
+                            psAmbilData.setString(2, tbUbahLama.getValueAt(r,0).toString());
+                            psAmbilData.setString(3, tbUbahLama.getValueAt(r,2).toString());
+                            psAmbilData.setString(4, tbUbahLama.getValueAt(r,3).toString());
+
+                            ResultSet rs = psAmbilData.executeQuery();
+                            if(rs.next()){
+                                tglKeluarDB = (rs.getString("tgl_keluar") == null) ? "0000-00-00" : rs.getString("tgl_keluar");
+                                jamKeluarDB = (rs.getString("jam_keluar") == null) ? "00:00:00" : rs.getString("jam_keluar");
+                                statusDB    = (rs.getString("stts_pulang") == null) ? "-" : rs.getString("stts_pulang");
+                            }
+                            rs.close();
+                            Sequel.mengedit("kamar_inap",
+                                "no_rawat='"+norawatubahlama.getText()+"' and kd_kamar='"+tbUbahLama.getValueAt(r,0)+"' " +
+                                "and tgl_masuk='"+tbUbahLama.getValueAt(r,2).toString()+"' and jam_masuk='"+tbUbahLama.getValueAt(r,3).toString()+"'",
+
+                                "tgl_keluar='"+tglKeluarDB+"',"+
+                                "jam_keluar='"+jamKeluarDB+"',"+
+                                "lama='"+tbUbahLama.getValueAt(r,6).toString()+"',"+
+                                "stts_pulang='"+statusDB+"',"+ 
+                                "ttl_biaya="+tbUbahLama.getValueAt(r,6).toString()+"*trf_kamar"
+                            );                       
+                        }
+                    }
+                    psAmbilData.close();
+
+                    JOptionPane.showMessageDialog(null, "Data Lama Inap berhasil diperbarui.");
+
+                } catch (Exception e) {
+                    System.out.println("Notifikasi Gagal Update : " + e);
                 }
+
+                isRawat();
+                WindowInput5.dispose();
             }
-            
-                       
-            isRawat();
-            WindowInput5.dispose();
-        }
     }//GEN-LAST:event_BtnSimpanUbahLamaActionPerformed
 
     private void BtnKeluarUbahLamaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnKeluarUbahLamaActionPerformed
